@@ -1,4 +1,4 @@
-package leesiongchan.modules.escpos;
+package leesiongchan.reactnativeescpos;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,12 +8,11 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.facebook.react.bridge.JavaScriptModule;
 
 public class EscPosPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        return Arrays.<NativeModule>asList(new EscPosModule(reactContext));
+        return Arrays.<NativeModule>asList(new EscPosModule(reactContext), new LayoutBuilderModule(reactContext));
     }
 
     @Override

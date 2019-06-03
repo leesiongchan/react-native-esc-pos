@@ -53,6 +53,7 @@ repositories {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'com.facebook.react:react-native:+'
+    implementation 'org.apache.commons:commons-lang3:3.4'
 }
 
 def configureReactNativePom(def pom) {
@@ -62,7 +63,7 @@ def configureReactNativePom(def pom) {
         name packageJson.title
         artifactId packageJson.name
         version = packageJson.version
-        group = "leesiongchan.modules.escpos"
+        group = "leesiongchan.reactnativeescpos"
         description packageJson.description
         url packageJson.repository.baseUrl
 

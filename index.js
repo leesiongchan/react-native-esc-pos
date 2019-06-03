@@ -1,5 +1,6 @@
-import { NativeModules } from 'react-native';
+import { NativeModules } from "react-native";
 
-const { EscPos } = NativeModules;
+const { EscPos, LayoutBuilder } = NativeModules;
 
+export { EscPos, LayoutBuilder };
 export default EscPos;
