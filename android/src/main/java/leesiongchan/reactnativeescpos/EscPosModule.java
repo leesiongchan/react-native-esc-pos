@@ -69,6 +69,11 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             throws BarcodeSizeError {
         printerService.printBarcode(code, bc, width, height, pos, font);
     }
+    
+    @ReactMethod
+    public void printDesign(String text) throws IOException {
+        printerService.printDesign(text);
+    }
 
     @ReactMethod
     public void printImage(String filePath) throws IOException {
@@ -78,6 +83,11 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void printQRCode(String value) throws QRCodeException {
         printerService.printQRCode(value);
+    }
+
+    @ReactMethod
+    public void printSample() {
+        printerService.printSample();
     }
 
     @ReactMethod
@@ -92,18 +102,22 @@ public class EscPosModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setPrintingSize(String printingSize) {
+        int charsOnLine;
         int printingWidth;
 
         switch (printingSize) {
         case PRINTING_SIZE_80_MM:
+            charsOnLine = LayoutBuilder.CHARS_ON_LINE_80_MM;
             printingWidth = PrinterService.PRINTING_WIDTH_80_MM;
             break;
 
         case PRINTING_SIZE_58_MM:
         default:
+            charsOnLine = LayoutBuilder.CHARS_ON_LINE_58_MM;
             printingWidth = PrinterService.PRINTING_WIDTH_58_MM;
         }
 
+        printerService.setCharsOnLine(charsOnLine);
         printerService.setPrintingWidth(printingWidth);
     }
 

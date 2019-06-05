@@ -1,33 +1,26 @@
 {
   "name": "react-native-esc-pos",
-  "title": "React Native Esc Pos",
-  "version": "0.0.1",
-  "description": "",
+  "description": "A React Native ESC/POS module to help you connect to your ESC/POS printer easily.",
+  "version": "0.1.0",
+  "repository": "https://github.com/leesiongchan/react-native-escpos",
+  "license": "MIT",
+  "author": "Lee Siong Chan <ahlee2326@me.com>",
+  "keywords": [
+    "react-native",
+    "esc/pos",
+    "printer",
+    "thermal printer"
+  ],
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/leesiongchan/react-native-esc-pos.git",
-    "baseUrl": "https://github.com/leesiongchan/react-native-esc-pos"
-  },
-  "keywords": [
-    "react-native"
-  ],
-  "author": {
-    "name": "Lee Siong Chan",
-    "email": "harvey@leesiongchan.space"
-  },
-  "license": "Apache-2.0",
-  "licenseFilename": "LICENSE",
-  "readmeFilename": "README.md",
-  "peerDependencies": {
-    "react": "^16.5.0",
-    "react-native": ">=0.57.0-rc.0 <1.0.x"
-  },
   "devDependencies": {
     "react": "^16.5.0",
     "react-native": "^0.59.4"
+  },
+  "peerDependencies": {
+    "react": "^16.5.0",
+    "react-native": ">=0.57.0-rc.0 <1.0.x"
   }
 }

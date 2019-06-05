@@ -1,4 +1,7 @@
-# react-native-esc-pos
+# React Native ESC/POS module
+
+A React Native ESC/POS module to help you connect to your ESC/POS printer easily.
+It also has provide an intuitive way to design your layout, check below example to see how easy to get your layout ready!
 
 ## Getting started
 
@@ -39,6 +42,51 @@
 ```javascript
 import EscPos from "react-native-esc-pos";
 
-// TODO: What to do with the module?
-EscPos;
+const design = `
+D0004           {<>}           Table #: A1
+------------------------------------------
+[ ] Espresso
+    - No sugar, Regular 9oz, Hot
+                              {H3} {R} x 1
+------------------------------------------
+[ ] Blueberry Cheesecake
+    - Slice
+                              {H3} {R} x 1
+
+{QR[Where are the aliens?]}
+`;
+
+// Connects to your printer
+const connected = EscPos.connect("10.10.10.10", 9100);
+
+if (connected) {
+  // Once connected, you can setup your printing size, either `PRINTING_SIZE_58_MM` or `PRINTING_SIZE_80_MM`
+  EscPos.setPrintingSize(EscPos.PRINTING_SIZE_80_MM);
+  // Test Print
+  EscPos.printSample();
+  // Cut half!
+  EscPos.cutHalf();
+  // You can also print image!
+  EscPos.printImage(file.uri);
+  // Print your design!
+  EscPos.printDesign(design);
+  // Print QR Code
+  EscPos.printQRCOde("Proxima b is the answer!");
+  // Cut full!
+  EscPos.cutFull();
+  // Beep!
+  EscPos.beep();
+  // Disconnect
+  EscPos.disconnect();
+}
 ```
+
+## TODO
+
+[x] Android support
+[ ] iOS support
+[ ] Print barcode
+[ ] Add TypeScript support
+[ ] Bluetooth support
+[ ] Serial port support
+[ ] Add test
