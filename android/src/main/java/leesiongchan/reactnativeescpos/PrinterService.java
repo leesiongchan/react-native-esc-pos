@@ -103,6 +103,7 @@ public class PrinterService {
     }
 
     public void printImage(Bitmap image) throws IOException {
+        image = EscPosHelper.resizeImage(image, printingWidth);
         ByteArrayOutputStream baos = generateImageByteArrayOutputStream(image);
         basePrinterService.write(baos.toByteArray());
     }
