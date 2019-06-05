@@ -5,7 +5,7 @@ It also has provide an intuitive way to design your layout, check below example 
 
 ## Getting started
 
-`$ npm install @leesiongchan/react-native-esc-pos --save` or `yarn add @leesiongchan/react-native-esc-pos`
+`$ yarn add @leesiongchan/react-native-esc-pos`
 
 ### Mostly automatic installation
 
