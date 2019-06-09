@@ -13,13 +13,13 @@ import io.github.escposjava.print.Printer;
 import io.github.escposjava.print.exceptions.BarcodeSizeError;
 import io.github.escposjava.print.exceptions.QRCodeException;
 
-import leesiongchan.reactnativeescpos.helpers.EscPosHelper;
-import leesiongchan.reactnativeescpos.utils.BitMatrixUtils;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+
+import leesiongchan.reactnativeescpos.helpers.EscPosHelper;
+import leesiongchan.reactnativeescpos.utils.BitMatrixUtils;
 
 import static io.github.escposjava.print.Commands.*;
 
@@ -72,20 +72,20 @@ public class PrinterService {
 
     public void printSample() throws IOException {
         String design =
-            "               ABC Inc. {C}               " +
-            "           1234 Main Street {C}           " +
-            "        Anytown, US 12345-6789 {C}        " +
-            "            (555) 123-4567 {C}            " +
-            "                                          " +
-            "          D0004 | Table #: A1 {C}         " +
-            "------------------------------------------" +
-            "Item            {<>}    Qty  Price  Amount" +
-            "Chicken Rice    {<>}      2  12.50   25.00" +
-            "Coke Zero       {<>}      5   3.00   15.00" +
-            "Fries           {<>}      3   3.00    9.00" +
-            "Fresh Oyster    {<>}      1   8.00    8.00" +
-            "Lobster Roll    {<>}      1  16.50   16.50" +
-            "------------------------------------------" +
+            "               ABC Inc. {C}               " + "\n" +
+            "           1234 Main Street {C}           " + "\n" +
+            "        Anytown, US 12345-6789 {C}        " + "\n" +
+            "            (555) 123-4567 {C}            " + "\n" +
+            "                                          " + "\n" +
+            "          D0004 | Table #: A1 {C}         " + "\n" +
+            "------------------------------------------" + "\n" +
+            "Item            {<>}    Qty  Price  Amount" + "\n" +
+            "Chicken Rice    {<>}      2  12.50   25.00" + "\n" +
+            "Coke Zero       {<>}      5   3.00   15.00" + "\n" +
+            "Fries           {<>}      3   3.00    9.00" + "\n" +
+            "Fresh Oyster    {<>}      1   8.00    8.00" + "\n" +
+            "Lobster Roll    {<>}      1  16.50   16.50" + "\n" +
+            "------------------------------------------" + "\n" +
             "       {QR[Where are the aliens?]}        ";
 
         printDesign(design);
