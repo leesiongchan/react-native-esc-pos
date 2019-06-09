@@ -86,7 +86,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void printSample() {
+    public void printSample() throws IOException {
         printerService.printSample();
     }
 

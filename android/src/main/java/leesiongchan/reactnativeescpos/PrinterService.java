@@ -70,7 +70,7 @@ public class PrinterService {
         basePrinterService.printBarcode(code, bc, width, height, pos, font);
     }
 
-    public void printSample() {
+    public void printSample() throws IOException {
         String design =
             "               ABC Inc. {C}               " +
             "           1234 Main Street {C}           " +
@@ -166,7 +166,7 @@ public class PrinterService {
      * DESIGN 3: Barcode                          *
      * {QR[Love me, hate me.]} {C}                *
      **/
-    private ByteArrayOutputStream generateDesignByteArrayOutputStream(String text) {
+    private ByteArrayOutputStream generateDesignByteArrayOutputStream(String text) throws IOException {
         BufferedReader reader = new BufferedReader(new StringReader(text.trim()));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         String line;
@@ -174,7 +174,7 @@ public class PrinterService {
         while ((line = reader.readLine()) != null) {
             if (line.matches("\\{QR\\[(.+)\\]\\}")) {
                 try {
-                    baos.write(generateQRCodeByteArrayOutputStream(line.replaceAll("\\{QR\\[(.+)\\]\\}", "$1")).toByteArray());
+                    baos.write(generateQRCodeByteArrayOutputStream(line.replaceAll("\\{QR\\[(.+)\\]\\}", "$1"), DEFAULT_QR_CODE_SIZE).toByteArray());
                 } catch (QRCodeException e) {
                     throw new IOException(e);
                 }
@@ -227,7 +227,7 @@ public class PrinterService {
         return baos;
     }
 
-    private ByteArrayOutputStream generateImageByteArrayOutputStream(Bitmap image) {
+    private ByteArrayOutputStream generateImageByteArrayOutputStream(Bitmap image) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         baos.write(LINE_SPACE_24);
