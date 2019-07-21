@@ -1,5 +1,6 @@
 package leesiongchan.reactnativeescpos;
 
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -20,6 +21,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     public static final String PRINTING_SIZE_80_MM = "PRINTING_SIZE_80_MM";
     private final ReactApplicationContext reactContext;
     private PrinterService printerService;
+    private Object config;
 
     public EscPosModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -127,17 +129,34 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public boolean connect(String address, int port) {
-        Printer printer = new NetworkPrinter(address, port);
-        printerService = new PrinterService(printer);
-
-        return true;
+    public void config(Object config) {
+        this.config = config;
     }
 
     @ReactMethod
-    public boolean disconnect() {
-        printerService.close();
+    public boolean connect(String address, int port, Promise promise) {
+        Printer printer;
+        switch (config.type) {
+            case 'network':
+                printer = new NetworkPrinter(address, port);
+                break;
 
-        return true;
+            case 'bluetooth':
+                printer = new BluetoothPrinter(address);
+                break;
+
+            default:
+                promise.reject('config.type is invalid not a valid type');
+        }
+
+        printerService = new PrinterService(printer);
+
+        promise.resolve(true);
+    }
+
+    @ReactMethod
+    public boolean disconnect(Promise promise) {
+        printerService.close();
+        promise.resolve(true);
     }
 }

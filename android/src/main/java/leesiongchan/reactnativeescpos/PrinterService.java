@@ -86,7 +86,7 @@ public class PrinterService {
             "Fresh Oyster    {<>}      1   8.00    8.00" + "\n" +
             "Lobster Roll    {<>}      1  16.50   16.50" + "\n" +
             "------------------------------------------" + "\n" +
-            "       {QR[Where are the aliens?]}        ";
+            "       {QR[Where are the aliens?]}        " + "\n";
 
         printDesign(design);
     }

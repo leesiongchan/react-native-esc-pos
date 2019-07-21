@@ -57,6 +57,7 @@ D0004           {<>}           Table #: A1
 `;
 
 // Connects to your printer
+EscPos.config({ type: 'network' });
 const connected = EscPos.connect("10.10.10.10", 9100);
 
 if (connected) {
@@ -87,6 +88,6 @@ if (connected) {
 - [ ] iOS support
 - [ ] Print barcode
 - [ ] Add TypeScript support
-- [ ] Bluetooth support
+- [x] Bluetooth support
 - [ ] Serial port support
 - [ ] Add test
