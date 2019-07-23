@@ -1,36 +1,35 @@
-package io.github.escposjava.print;
+package leesiongchan.reactnativeescpos;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-import io.github.escposjava.Printer;
+import io.github.escposjava.print.Printer;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
 
 public class BluetoothPrinter implements Printer {
-    // TODO: should this be hardcoded?
-    private static final UUID APP_UUID = UUID.fromString('16d478c4-1144-4428-80e3-26b34ff382f9');
+    private static final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private BluetoothAdapter adapter;
 
-    private OutputStream printer  = null;
+    private OutputStream printer = null;
     private final String address;
 
-   public BluetoothPrinter(String address) {
+    public BluetoothPrinter(String address) {
         adapter = BluetoothAdapter.getDefaultAdapter();
         this.address = address;
-   }
+    }
 
     public void open() {
         try {
             BluetoothDevice device = adapter.getRemoteDevice(address);
-            BluetoothSocket socket = createRfcommSocketToServiceRecord(APP_UUID);
+            BluetoothSocket socket = device.createRfcommSocketToServiceRecord(SPP_UUID);
+            socket.connect();
             printer = socket.getOutputStream();
         } catch (IOException e) {
             e.printStackTrace();
-
         }
     }
 
@@ -43,11 +42,11 @@ public class BluetoothPrinter implements Printer {
         }
     }
 
-   public void close(){
+    public void close() {
         try {
             printer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-   }
+    }
 }

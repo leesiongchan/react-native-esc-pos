@@ -1,7 +1,7 @@
 {
   "name": "@leesiongchan/react-native-esc-pos",
   "description": "A React Native ESC/POS module to help you connect to your ESC/POS printer easily.",
-  "version": "0.2.0-alpha",
+  "version": "0.2.6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/leesiongchan/react-native-escpos.git",
@@ -13,9 +13,11 @@
     "email": "ahlee2326@me.com"
   },
   "keywords": [
-    "react-native",
+    "bluetooth",
     "esc/pos",
+    "network",
     "printer",
+    "react-native",
     "thermal printer"
   ],
   "main": "index.js",

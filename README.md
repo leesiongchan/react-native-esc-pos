@@ -56,29 +56,36 @@ D0004           {<>}           Table #: A1
 {QR[Where are the aliens?]}
 `;
 
-// Connects to your printer
-EscPos.config({ type: 'network' });
-const connected = EscPos.connect("10.10.10.10", 9100);
+async function testPrinter() {
+  try {
+    // Can be `network` or `bluetooth`
+    EscPos.config({ type: "network" });
 
-if (connected) {
-  // Once connected, you can setup your printing size, either `PRINTING_SIZE_58_MM` or `PRINTING_SIZE_80_MM`
-  EscPos.setPrintingSize(EscPos.PRINTING_SIZE_80_MM);
-  // Test Print
-  EscPos.printSample();
-  // Cut half!
-  EscPos.cutHalf();
-  // You can also print image!
-  EscPos.printImage(file.uri);
-  // Print your design!
-  EscPos.printDesign(design);
-  // Print QR Code
-  EscPos.printQRCOde("Proxima b is the answer!");
-  // Cut full!
-  EscPos.cutFull();
-  // Beep!
-  EscPos.beep();
-  // Disconnect
-  EscPos.disconnect();
+    // Connects to your printer
+    // If you use `bluetooth`, second parameter is not required.
+    await EscPos.connect("10.10.10.10", 9100);
+
+    // Once connected, you can setup your printing size, either `PRINTING_SIZE_58_MM` or `PRINTING_SIZE_80_MM`
+    await EscPos.setPrintingSize(EscPos.PRINTING_SIZE_80_MM);
+    // Test Print
+    await EscPos.printSample();
+    // Cut half!
+    await EscPos.cutHalf();
+    // You can also print image!
+    await EscPos.printImage(file.uri);
+    // Print your design!
+    await EscPos.printDesign(design);
+    // Print QR Code
+    await EscPos.printQRCOde("Proxima b is the answer!");
+    // Cut full!
+    await EscPos.cutFull();
+    // Beep!
+    await EscPos.beep();
+    // Disconnect
+    await EscPos.disconnect();
+  } catch (error) {
+    console.error(error);
+  }
 }
 ```
 
