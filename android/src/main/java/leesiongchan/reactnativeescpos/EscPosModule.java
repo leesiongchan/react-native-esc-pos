@@ -47,38 +47,38 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void cutPart(Promise promise) {
         printerService.cutPart();
-        promise.resolve();
+        promise.resolve(true);
     }
 
     @ReactMethod
     public void cutFull(Promise promise) {
         printerService.cutFull();
-        promise.resolve();
+        promise.resolve(true);
     }
 
     @ReactMethod
     public void lineBreak(Promise promise) {
         printerService.lineBreak();
-        promise.resolve();
+        promise.resolve(true);
     }
 
     @ReactMethod
     public void print(String text, Promise promise) {
         printerService.print(text);
-        promise.resolve();
+        promise.resolve(true);
     }
 
     @ReactMethod
     public void printLn(String text, Promise promise) {
         printerService.printLn(text);
-        promise.resolve();
+        promise.resolve(true);
     }
 
     @ReactMethod
     public void printBarcode(String code, String bc, int width, int height, String pos, String font, Promise promise) {
         try {
             printerService.printBarcode(code, bc, width, height, pos, font);
-            promise.resolve();
+            promise.resolve(true);
         } catch (BarcodeSizeError e) {
             promise.reject(e);
         }
@@ -88,7 +88,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     public void printDesign(String text, Promise promise) {
         try {
             printerService.printDesign(text);
-            promise.resolve();
+            promise.resolve(true);
         } catch (IOException e) {
             promise.reject(e);
         }
@@ -98,7 +98,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     public void printImage(String filePath, Promise promise) {
         try {
             printerService.printImage(filePath);
-            promise.resolve();
+            promise.resolve(true);
         } catch (IOException e) {
             promise.reject(e);
         }
@@ -108,7 +108,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     public void printQRCode(String value, Promise promise) {
         try {
             printerService.printQRCode(value);
-            promise.resolve();
+            promise.resolve(true);
         } catch (QRCodeException e) {
             promise.reject(e);
         }
@@ -118,7 +118,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     public void printSample(Promise promise) {
         try {
             printerService.printSample();
-            promise.resolve();
+            promise.resolve(true);
         } catch (IOException e) {
             promise.reject(e);
         }
@@ -127,7 +127,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void write(byte[] command, Promise promise) {
         printerService.write(command);
-        promise.resolve();
+        promise.resolve(true);
     }
 
     @ReactMethod
@@ -159,11 +159,11 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void beep(Promise promise) {
         printerService.beep();
-        promise.resolve();
+        promise.resolve(true);
     }
 
     @ReactMethod
-    public void config(ReadableMap config) {
+    public void setConfig(ReadableMap config) {
         this.config = config;
     }
 
