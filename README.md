@@ -59,14 +59,14 @@ D0004           {<>}           Table #: A1
 async function testPrinter() {
   try {
     // Can be `network` or `bluetooth`
-    EscPos.config({ type: "network" });
+    EscPos.seConfig({ type: "network" });
 
     // Connects to your printer
     // If you use `bluetooth`, second parameter is not required.
     await EscPos.connect("10.10.10.10", 9100);
 
     // Once connected, you can setup your printing size, either `PRINTING_SIZE_58_MM` or `PRINTING_SIZE_80_MM`
-    await EscPos.setPrintingSize(EscPos.PRINTING_SIZE_80_MM);
+    EscPos.setPrintingSize(EscPos.PRINTING_SIZE_80_MM);
     // Test Print
     await EscPos.printSample();
     // Cut half!
