@@ -12,6 +12,7 @@ import io.github.escposjava.print.exceptions.BarcodeSizeError;
 import io.github.escposjava.print.exceptions.QRCodeException;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,14 +65,22 @@ public class EscPosModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void print(String text, Promise promise) {
-        printerService.print(text);
-        promise.resolve(true);
+        try {
+            printerService.print(text);
+            promise.resolve(true);
+        } catch (UnsupportedEncodingException e) {
+            promise.reject(e);
+        }
     }
 
     @ReactMethod
     public void printLn(String text, Promise promise) {
-        printerService.printLn(text);
-        promise.resolve(true);
+        try {
+            printerService.printLn(text);
+            promise.resolve(true);
+        } catch (UnsupportedEncodingException e) {
+            promise.reject(e);
+        }
     }
 
     @ReactMethod
@@ -168,8 +177,8 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void connect(String address, Promise promise) {
-        if (config.getString("type") != "bluetooth") {
+    public void connectBluetoothPrinter(String address, Promise promise) {
+        if (!"bluetooth".equals(config.getString("type"))) {
             promise.reject("config.type is not a bluetooth type");
         }
         Printer printer = new BluetoothPrinter(address);
@@ -178,8 +187,8 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void connect(String address, int port, Promise promise) {
-        if (config.getString("type") != "network") {
+    public void connectNetworkPrinter(String address, int port, Promise promise) {
+        if (!"network".equals(config.getString("type"))) {
             promise.reject("config.type is not a network type");
         }
         Printer printer = new NetworkPrinter(address, port);

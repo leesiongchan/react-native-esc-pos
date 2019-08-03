@@ -70,7 +70,7 @@ async function testPrinter() {
     // Test Print
     await EscPos.printSample();
     // Cut half!
-    await EscPos.cutHalf();
+    await EscPos.cutPart();
     // You can also print image!
     await EscPos.printImage(file.uri);
     // Print your design!
@@ -98,3 +98,4 @@ async function testPrinter() {
 - [x] Bluetooth support
 - [ ] Serial port support
 - [ ] Add test
+- [ ] Listen to the connection status

@@ -16,6 +16,7 @@ import io.github.escposjava.print.exceptions.QRCodeException;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.io.StringReader;
 
 import leesiongchan.reactnativeescpos.helpers.EscPosHelper;
@@ -26,6 +27,7 @@ import static io.github.escposjava.print.Commands.*;
 public class PrinterService {
     public static final int PRINTING_WIDTH_58_MM = 384;
     public static final int PRINTING_WIDTH_80_MM = 576;
+    private static final String CARRIAGE_RETURN = System.getProperty("line.separator");
     private LayoutBuilder layoutBuilder = new LayoutBuilder();
     private final int DEFAULT_QR_CODE_SIZE = 200;
     private int printingWidth = PRINTING_WIDTH_58_MM;
@@ -48,12 +50,12 @@ public class PrinterService {
         basePrinterService.cutFull();
     }
 
-    public void print(String text) {
-        basePrinterService.print(text);
+    public void print(String text) throws UnsupportedEncodingException {
+        write(text.getBytes("GBK"));
     }
 
-    public void printLn(String text) {
-        basePrinterService.printLn(text);
+    public void printLn(String text) throws UnsupportedEncodingException {
+        print(text + CARRIAGE_RETURN);
     }
 
     public void lineBreak() {
@@ -93,7 +95,7 @@ public class PrinterService {
 
     public void printDesign(String text) throws IOException {
         ByteArrayOutputStream baos = generateDesignByteArrayOutputStream(text);
-        basePrinterService.write(baos.toByteArray());
+        write(baos.toByteArray());
     }
 
     public void printImage(String filePath) throws IOException {
@@ -105,7 +107,7 @@ public class PrinterService {
     public void printImage(Bitmap image) throws IOException {
         image = EscPosHelper.resizeImage(image, printingWidth);
         ByteArrayOutputStream baos = generateImageByteArrayOutputStream(image);
-        basePrinterService.write(baos.toByteArray());
+        write(baos.toByteArray());
     }
 
     public void printQRCode(String value) throws QRCodeException {
@@ -114,7 +116,7 @@ public class PrinterService {
 
     public void printQRCode(String value, int size) throws QRCodeException {
         ByteArrayOutputStream baos = generateQRCodeByteArrayOutputStream(value, size);
-        basePrinterService.write(baos.toByteArray());
+        write(baos.toByteArray());
     }
 
     public void write(byte[] command) {
@@ -174,7 +176,8 @@ public class PrinterService {
         while ((line = reader.readLine()) != null) {
             if (line.matches("\\{QR\\[(.+)\\]\\}")) {
                 try {
-                    baos.write(generateQRCodeByteArrayOutputStream(line.replaceAll("\\{QR\\[(.+)\\]\\}", "$1"), DEFAULT_QR_CODE_SIZE).toByteArray());
+                    baos.write(generateQRCodeByteArrayOutputStream(line.replaceAll("\\{QR\\[(.+)\\]\\}", "$1"),
+                            DEFAULT_QR_CODE_SIZE).toByteArray());
                 } catch (QRCodeException e) {
                     throw new IOException(e);
                 }
@@ -210,7 +213,11 @@ public class PrinterService {
                 charsOnLine = charsOnLine / 2;
             }
 
-            baos.write(layoutBuilder.createFromDesign(line, charsOnLine).getBytes());
+            try {
+                baos.write(layoutBuilder.createFromDesign(line, charsOnLine).getBytes("GBK"));
+            } catch (UnsupportedEncodingException e) {
+                // Do nothing?
+            }
 
             // Remove tags
             if (bold) {
