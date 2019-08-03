@@ -59,7 +59,7 @@ D0004           {<>}           Table #: A1
 async function testPrinter() {
   try {
     // Can be `network` or `bluetooth`
-    EscPos.seConfig({ type: "network" });
+    EscPos.setConfig({ type: "network" });
 
     // Connects to your printer
     // If you use `bluetooth`, second parameter is not required.
