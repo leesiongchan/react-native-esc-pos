@@ -1,10 +1,17 @@
 package leesiongchan.reactnativeescpos;
 
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import io.github.escposjava.print.NetworkPrinter;
 import io.github.escposjava.print.Printer;
@@ -201,4 +208,44 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         printerService.close();
         promise.resolve(true);
     }
+
+    @ReactMethod
+    public void initBluetoothConnectionListener() {
+        // Add listener when bluetooth conencted
+        reactContext.registerReceiver(bluetoothConnectionEventListener,
+                new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
+
+        // Add listener when bluetooth disconnected
+        reactContext.registerReceiver(bluetoothConnectionEventListener,
+                new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
+    }
+
+    /**
+     * Bluetooth Connection Event Listener
+     */
+    private BroadcastReceiver bluetoothConnectionEventListener = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            BluetoothDevice bluetoothDevice = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+            // if action or bluetooth data is null
+            if (action == null || bluetoothDevice == null) {
+                // do not proceed
+                return;
+            }
+            
+            // check action and react accordingly
+            switch (action) {
+            case BluetoothDevice.ACTION_ACL_CONNECTED:
+                reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit("Bluetooth-Connected", bluetoothDevice.getName());
+                break;
+
+            case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit("Bluetooth-Disconnected", bluetoothDevice.getName());
+                break;
+            }
+        }
+    };
 }
