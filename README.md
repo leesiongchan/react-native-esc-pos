@@ -89,6 +89,31 @@ async function testPrinter() {
 }
 ```
 
+## Events
+
+To listen to bluetooth state change
+
+```javascript
+EscPos.addListener('bluetoothStateChanged', (event: any) => {
+  if (event.state === EscPos.BLUETOOTH_CONNECTED) {
+    console.log('Device Connected!');
+    console.log('Device Name :: ' +event.deviceInfo.name);
+    console.log('Device MAC Address :: ' +event.deviceInfo.macAddress);
+  }
+});
+```
+
+To get Bluetooth Conenction State:
+- EscPos.BLUETOOTH_CONNECTED
+- EscPos.BLUETOOTH_DISCONNECTED
+
+To get Connected / Disconnected Bluetooth Device Info
+Device Name:
+- event.deviceInfo.name
+
+Device MAC Address:
+- event.deviceInfo.macAddress
+
 ## TODO
 
 - [x] Android support
