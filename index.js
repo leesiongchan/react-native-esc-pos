@@ -4,7 +4,7 @@ const { LayoutBuilder } = NativeModules;
 
 const EscPos = {
   ...NativeModules.EscPos,
-  addListener = (eventName, cb) => {
+  addListener(eventName, cb) {
     switch (eventName) {
       case 'bluetoothStateChanged':
         EscPos.initBluetoothConnectionListener();
@@ -12,7 +12,7 @@ const EscPos = {
         break;
 
       default:
-        throw new Error('Event name not exist!');
+        throw new Error(`${eventName} is not a valid event name.`);
     }
   },
   // TODO: What is the best way to add optional arguments to @ReactMethod? overloading doesn seem to be working??
