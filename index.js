@@ -26,5 +26,6 @@ EscPos.addListener = (eventName, cb) => {
     }
   };
   
+      default:
 export { EscPos, LayoutBuilder };
 export default EscPos;
