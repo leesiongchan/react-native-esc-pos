@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import io.github.escposjava.print.NetworkPrinter;
@@ -29,9 +31,15 @@ import static io.github.escposjava.print.Commands.*;
 public class EscPosModule extends ReactContextBaseJavaModule {
     public static final String PRINTING_SIZE_58_MM = "PRINTING_SIZE_58_MM";
     public static final String PRINTING_SIZE_80_MM = "PRINTING_SIZE_80_MM";
+    public static final String BLUETOOTH_CONNECTED = "BLUETOOTH_CONNECTED";
+    public static final String BLUETOOTH_DISCONNECTED = "BLUETOOTH_DISCONNECTED";
     private final ReactApplicationContext reactContext;
     private PrinterService printerService;
     private ReadableMap config;
+
+    enum BluetoothEvent {
+        CONNECTED, DISCONNECTED, NONE
+    }
 
     public EscPosModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -43,6 +51,8 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         final Map<String, Object> constants = new HashMap<>();
         constants.put(PRINTING_SIZE_58_MM, PRINTING_SIZE_58_MM);
         constants.put(PRINTING_SIZE_80_MM, PRINTING_SIZE_80_MM);
+        constants.put(BLUETOOTH_CONNECTED, BluetoothEvent.CONNECTED.name());
+        constants.put(BLUETOOTH_DISCONNECTED, BluetoothEvent.DISCONNECTED.name());
         return constants;
     }
 
@@ -216,26 +226,46 @@ public class EscPosModule extends ReactContextBaseJavaModule {
      */
     private BroadcastReceiver bluetoothConnectionEventListener = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
+            String callbackAction = intent.getAction();
             BluetoothDevice bluetoothDevice = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
             // if action or bluetooth data is null
-            if (action == null || bluetoothDevice == null) {
+            if (callbackAction == null || bluetoothDevice == null) {
                 // do not proceed
                 return;
             }
-            
-            // check action and react accordingly
-            switch (action) {
+
+            // hold value for bluetooth event
+            BluetoothEvent bluetoothEvent;
+
+            switch (callbackAction) {
             case BluetoothDevice.ACTION_ACL_CONNECTED:
-                reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                        .emit("Bluetooth-Connected", bluetoothDevice.getName());
+                bluetoothEvent = BluetoothEvent.CONNECTED;
                 break;
 
             case BluetoothDevice.ACTION_ACL_DISCONNECTED:
-                reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                        .emit("Bluetooth-Disconnected", bluetoothDevice.getName());
+                bluetoothEvent = BluetoothEvent.DISCONNECTED;
                 break;
+                
+            default:
+                bluetoothEvent = BluetoothEvent.NONE;
+            }
+
+            // bluetooth event must not be null
+            if (bluetoothEvent != BluetoothEvent.NONE) {
+                // extract bluetooth device info and put in deviceInfoParams
+                WritableMap deviceInfoParams = Arguments.createMap();
+                deviceInfoParams.putString("name", bluetoothDevice.getName());
+                deviceInfoParams.putString("macAddress", bluetoothDevice.getAddress());
+
+                // put deviceInfoParams into callbackParams
+                WritableMap callbackParams = Arguments.createMap();
+                callbackParams.putMap("deviceInfo", deviceInfoParams);
+                callbackParams.putString("state", bluetoothEvent.name());
+
+                // emit callback to RN code
+                reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit("bluetoothStateChanged", callbackParams);
             }
         }
     };
