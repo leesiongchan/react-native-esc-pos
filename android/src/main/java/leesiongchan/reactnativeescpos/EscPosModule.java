@@ -1,5 +1,6 @@
 package leesiongchan.reactnativeescpos;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -39,7 +40,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     private ReadableMap config;
 
     enum BluetoothEvent {
-        CONNECTED, DISCONNECTED, NONE
+        CONNECTED, DISCONNECTED, DEVICE_FOUND, NONE
     }
 
     public EscPosModule(ReactApplicationContext reactContext) {
@@ -54,6 +55,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         constants.put(PRINTING_SIZE_80_MM, PRINTING_SIZE_80_MM);
         constants.put(BLUETOOTH_CONNECTED, BluetoothEvent.CONNECTED.name());
         constants.put(BLUETOOTH_DISCONNECTED, BluetoothEvent.DISCONNECTED.name());
+        constants.put(BLUETOOTH_DEVICE_FOUND, BluetoothEvent.DEVICE_FOUND.name());
         return constants;
     }
 
@@ -220,6 +222,29 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void scanDevice() {
+        ScanManager scanManager = new ScanManager(reactContext, BluetoothAdapter.getDefaultAdapter());
+        scanManager.registerCallback(new ScanManager.OnBluetoothScanListener() {
+            @Override
+            public void deviceFound(BluetoothDevice bluetoothDevice) {
+                WritableMap deviceInfoParams = Arguments.createMap();
+                deviceInfoParams.putString("name", bluetoothDevice.getName());
+                deviceInfoParams.putString("macAddress", bluetoothDevice.getAddress());
+
+                // put deviceInfoParams into callbackParams
+                WritableMap callbackParams = Arguments.createMap();
+                callbackParams.putMap("deviceInfo", deviceInfoParams);
+                callbackParams.putString("state", BluetoothEvent.DEVICE_FOUND.name());
+
+                // emit callback to RN code
+                reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit("bluetoothDeviceFound", callbackParams);
+            }
+        });
+        scanManager.startScan();
+    }
+
+    @ReactMethod
     public void initBluetoothConnectionListener() {
         // Add listener when bluetooth conencted
         reactContext.registerReceiver(bluetoothConnectionEventListener,
@@ -255,7 +280,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             case BluetoothDevice.ACTION_ACL_DISCONNECTED:
                 bluetoothEvent = BluetoothEvent.DISCONNECTED;
                 break;
-                
+
             default:
                 bluetoothEvent = BluetoothEvent.NONE;
             }

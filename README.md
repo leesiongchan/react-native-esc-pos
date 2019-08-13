@@ -89,6 +89,23 @@ async function testPrinter() {
 }
 ```
 
+## Scan For Bluetooth Devices
+To scan for available bluetooth in range
+```javascript
+EscPos.scanDevice();
+```
+
+Register callback events to receive device found:-
+```javascript
+EscPos.addListener("bluetoothDeviceFound", (event: any) => {
+  if (event.state === EscPos.BLUETOOTH_DEVICE_FOUND) {
+    console.log("Device Found!");
+    console.log("Device Name : " + event.deviceInfo.name);
+    console.log("Device MAC Address : " + event.deviceInfo.macAddress);
+  }
+```
+
+
 ## Events
 
 To listen to bluetooth state change

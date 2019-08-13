@@ -11,6 +11,10 @@ const EscPos = {
         DeviceEventEmitter.addListener('bluetoothStateChanged', cb);
         break;
 
+      case 'bluetoothDeviceFound':
+        DeviceEventEmitter.addListener('bluetoothDeviceFound', cb);
+        break;
+
       default:
         throw new Error(`${eventName} is not a valid event name.`);
     }
