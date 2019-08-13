@@ -35,9 +35,11 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     public static final String PRINTING_SIZE_80_MM = "PRINTING_SIZE_80_MM";
     public static final String BLUETOOTH_CONNECTED = "BLUETOOTH_CONNECTED";
     public static final String BLUETOOTH_DISCONNECTED = "BLUETOOTH_DISCONNECTED";
+    public static final String BLUETOOTH_DEVICE_FOUND = "BLUETOOTH_DEVICE_FOUND";
     private final ReactApplicationContext reactContext;
     private PrinterService printerService;
     private ReadableMap config;
+    private ScanManager scanManager;
 
     enum BluetoothEvent {
         CONNECTED, DISCONNECTED, DEVICE_FOUND, NONE
@@ -46,6 +48,8 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     public EscPosModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
+
+        scanManager = new ScanManager(reactContext, BluetoothAdapter.getDefaultAdapter());
     }
 
     @Override
@@ -222,8 +226,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void scanDevices() {
-        ScanManager scanManager = new ScanManager(reactContext, BluetoothAdapter.getDefaultAdapter());
+    public void scanDevice() {
         scanManager.registerCallback(new ScanManager.OnBluetoothScanListener() {
             @Override
             public void deviceFound(BluetoothDevice bluetoothDevice) {
@@ -242,6 +245,11 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             }
         });
         scanManager.startScan();
+    }
+
+    @ReactMethod
+    public void stopScan() {
+        scanManager.stopScan();
     }
 
     @ReactMethod
