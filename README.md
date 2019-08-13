@@ -95,6 +95,11 @@ To scan for available bluetooth in range
 EscPos.scanDevices();
 ```
 
+To stop scan
+```javascript
+EscPos.stopScan();
+```
+
 Register callback events to receive device found:-
 ```javascript
 EscPos.addListener("bluetoothDeviceFound", (event: any) => {
