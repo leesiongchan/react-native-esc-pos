@@ -92,7 +92,7 @@ async function testPrinter() {
 ## Scan For Bluetooth Devices
 To scan for available bluetooth in range
 ```javascript
-EscPos.scanDevice();
+EscPos.scanDevices();
 ```
 
 Register callback events to receive device found:-
