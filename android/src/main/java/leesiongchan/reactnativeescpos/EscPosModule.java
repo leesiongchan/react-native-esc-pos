@@ -226,7 +226,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void scanDevice() {
+    public void scanDevices() {
         scanManager.registerCallback(new ScanManager.OnBluetoothScanListener() {
             @Override
             public void deviceFound(BluetoothDevice bluetoothDevice) {
