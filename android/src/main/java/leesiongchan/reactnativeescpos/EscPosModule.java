@@ -201,32 +201,44 @@ public class EscPosModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void connectBluetoothPrinter(String address, Promise promise) {
-        if (!"bluetooth".equals(config.getString("type"))) {
-            promise.reject("config.type is not a bluetooth type");
+        try {
+            if (!"bluetooth".equals(config.getString("type"))) {
+                promise.reject("config.type is not a bluetooth type");
+            }
+            Printer printer = new BluetoothPrinter(address);
+            printerService = new PrinterService(printer);
+            promise.resolve(true);
+        } catch (IOException e) {
+            promise.reject(e);
         }
-        Printer printer = new BluetoothPrinter(address);
-        printerService = new PrinterService(printer);
-        promise.resolve(true);
     }
 
     @ReactMethod
     public void connectNetworkPrinter(String address, int port, Promise promise) {
-        if (!"network".equals(config.getString("type"))) {
-            promise.reject("config.type is not a network type");
+        try {
+            if (!"network".equals(config.getString("type"))) {
+                promise.reject("config.type is not a network type");
+            }
+            Printer printer = new NetworkPrinter(address, port);
+            printerService = new PrinterService(printer);
+            promise.resolve(true);
+        } catch (IOException e) {
+            promise.reject(e);
         }
-        Printer printer = new NetworkPrinter(address, port);
-        printerService = new PrinterService(printer);
-        promise.resolve(true);
     }
 
     @ReactMethod
     public void disconnect(Promise promise) {
-        printerService.close();
-        promise.resolve(true);
+        try {
+            printerService.close();
+            promise.resolve(true);
+        } catch (IOException e) {
+            promise.reject(e);
+        }
     }
 
     @ReactMethod
-    public void scanDevice() {
+    public void scanDevices() {
         scanManager.registerCallback(new ScanManager.OnBluetoothScanListener() {
             @Override
             public void deviceFound(BluetoothDevice bluetoothDevice) {

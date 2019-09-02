@@ -16,8 +16,8 @@ import io.github.escposjava.print.exceptions.QRCodeException;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 
 import leesiongchan.reactnativeescpos.helpers.EscPosHelper;
 import leesiongchan.reactnativeescpos.utils.BitMatrixUtils;
@@ -139,11 +139,11 @@ public class PrinterService {
         basePrinterService.beep();
     }
 
-    public void open() {
+    public void open() throws IOException {
         basePrinterService.open();
     }
 
-    public void close() {
+    public void close() throws IOException {
         basePrinterService.close();
     }
 
