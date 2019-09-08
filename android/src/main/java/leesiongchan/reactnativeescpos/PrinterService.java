@@ -33,11 +33,11 @@ public class PrinterService {
     private int printingWidth = PRINTING_WIDTH_58_MM;
     private io.github.escposjava.PrinterService basePrinterService;
 
-    public PrinterService(Printer printer) {
+    public PrinterService(Printer printer) throws IOException {
         basePrinterService = new io.github.escposjava.PrinterService(printer);
     }
 
-    public PrinterService(Printer printer, int printingWidth) {
+    public PrinterService(Printer printer, int printingWidth) throws IOException {
         basePrinterService = new io.github.escposjava.PrinterService(printer);
         this.printingWidth = printingWidth;
     }
