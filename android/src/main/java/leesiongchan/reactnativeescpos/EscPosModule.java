@@ -168,6 +168,11 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void setTextDensity(int density) {
+        printerService.setTextDensity(density);
+    }
+
+    @ReactMethod
     public void setPrintingSize(String printingSize) {
         int charsOnLine;
         int printingWidth;

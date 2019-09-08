@@ -135,6 +135,10 @@ public class PrinterService {
         this.printingWidth = printingWidth;
     }
 
+    public void setTextDensity(int density) {
+        basePrinterService.setTextDensity(density);
+    }
+
     public void beep() {
         basePrinterService.beep();
     }
@@ -189,6 +193,8 @@ public class PrinterService {
             boolean h1 = line.contains("{H1}");
             boolean h2 = line.contains("{H2}");
             boolean h3 = line.contains("{H3}");
+            boolean lsm = line.contains("{LS:M}");
+            boolean lsl = line.contains("{LS:L}");
             int charsOnLine = layoutBuilder.getCharsOnLine();
 
             // Add tags
@@ -212,6 +218,13 @@ public class PrinterService {
                 line = line.replace("{H3}", "");
                 charsOnLine = charsOnLine / 2;
             }
+            if (lsm) {
+                baos.write(LINE_SPACE_24);
+                line = line.replace("{LS:M}", "");
+            } else if (lsl) {
+                baos.write(LINE_SPACE_30);
+                line = line.replace("{LS:L}", "");
+            }
 
             try {
                 baos.write(layoutBuilder.createFromDesign(line, charsOnLine).getBytes("GBK"));
@@ -228,6 +241,9 @@ public class PrinterService {
             }
             if (h1 || h2 || h3) {
                 baos.write(TXT_NORMAL);
+            }
+            if (lsm || lsl) {
+                baos.write(LINE_SPACE_24);
             }
         }
 
