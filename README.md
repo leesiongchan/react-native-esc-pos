@@ -67,6 +67,8 @@ async function testPrinter() {
 
     // Once connected, you can setup your printing size, either `PRINTING_SIZE_58_MM` or `PRINTING_SIZE_80_MM`
     EscPos.setPrintingSize(EscPos.PRINTING_SIZE_80_MM);
+    // 1 to 9 (1-3 = smaller, 4 = default, 5-9 = larger)
+    EscPos.setTextDensity(9);
     // Test Print
     await EscPos.printSample();
     // Cut half!
@@ -109,7 +111,6 @@ EscPos.addListener("bluetoothDeviceFound", (event: any) => {
     console.log("Device MAC Address : " + event.deviceInfo.macAddress);
   }
 ```
-
 
 ## Events
 
