@@ -7,6 +7,8 @@ It also has provide an intuitive way to design your layout, check below example 
 
 `$ yarn add @leesiongchan/react-native-esc-pos`
 
+** NOTE: Skip below installation guide if you are using React Native >= 0.60 **
+
 ### Mostly automatic installation
 
 `$ react-native link @leesiongchan/react-native-esc-pos`
@@ -92,17 +94,21 @@ async function testPrinter() {
 ```
 
 ## Scan For Bluetooth Devices
+
 To scan for available bluetooth in range
+
 ```javascript
 EscPos.scanDevices();
 ```
 
 To stop scan
+
 ```javascript
 EscPos.stopScan();
 ```
 
 Register callback events to receive device found:-
+
 ```javascript
 EscPos.addListener("bluetoothDeviceFound", (event: any) => {
   if (event.state === EscPos.BLUETOOTH_DEVICE_FOUND) {
