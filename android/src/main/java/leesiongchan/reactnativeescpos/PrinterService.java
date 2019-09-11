@@ -66,7 +66,7 @@ public class PrinterService {
         basePrinterService.lineBreak(nbLine);
     }
 
-    // TODO This isn't working correctly
+    // TODO: This isn't working correctly
     public void printBarcode(String code, String bc, int width, int height, String pos, String font)
             throws BarcodeSizeError {
         basePrinterService.printBarcode(code, bc, width, height, pos, font);
@@ -197,6 +197,15 @@ public class PrinterService {
             boolean lsl = line.contains("{LS:L}");
             int charsOnLine = layoutBuilder.getCharsOnLine();
 
+            // TODO: Shouldn't put it here
+            byte[] ESC_t = new byte[] { 0x1b, 't', 0x00 };
+            byte[] ESC_M = new byte[] { 0x1b, 'M', 0x00 };
+            byte[] FS_and = new byte[] { 0x1c, '&' };
+            byte[] TXT_NORMAL_NEW = new byte[] { 0x1d, '!', 0x00 };
+            byte[] TXT_4SQUARE_NEW = new byte[] { 0x1d, '!', 0x11 };
+            byte[] TXT_2HEIGHT_NEW = new byte[] { 0x1d, '!', 0x01 };
+            byte[] TXT_2WIDTH_NEW = new byte[] { 0x1d, '!', 0x10 };
+
             // Add tags
             if (bold) {
                 baos.write(TXT_BOLD_ON);
@@ -207,14 +216,14 @@ public class PrinterService {
                 line = line.replace("{U}", "");
             }
             if (h1) {
-                baos.write(TXT_4SQUARE);
+                baos.write(TXT_4SQUARE_NEW);
                 line = line.replace("{H1}", "");
                 charsOnLine = charsOnLine / 2;
             } else if (h2) {
-                baos.write(TXT_2HEIGHT);
+                baos.write(TXT_2HEIGHT_NEW);
                 line = line.replace("{H2}", "");
             } else if (h3) {
-                baos.write(TXT_2WIDTH);
+                baos.write(TXT_2WIDTH_NEW);
                 line = line.replace("{H3}", "");
                 charsOnLine = charsOnLine / 2;
             }
@@ -225,6 +234,10 @@ public class PrinterService {
                 baos.write(LINE_SPACE_30);
                 line = line.replace("{LS:L}", "");
             }
+
+            baos.write(ESC_t);
+            baos.write(FS_and);
+            baos.write(ESC_M);
 
             try {
                 baos.write(layoutBuilder.createFromDesign(line, charsOnLine).getBytes("GBK"));
@@ -240,7 +253,7 @@ public class PrinterService {
                 baos.write(TXT_UNDERL_OFF);
             }
             if (h1 || h2 || h3) {
-                baos.write(TXT_NORMAL);
+                baos.write(TXT_NORMAL_NEW);
             }
             if (lsm || lsl) {
                 baos.write(LINE_SPACE_24);
