@@ -110,10 +110,6 @@ public class PrinterService {
         write(baos.toByteArray());
     }
 
-    public void printQRCode(String value) throws QRCodeException {
-        printQRCode(value, DEFAULT_QR_CODE_SIZE);
-    }
-
     public void printQRCode(String value, int size) throws QRCodeException {
         ByteArrayOutputStream baos = generateQRCodeByteArrayOutputStream(value, size);
         write(baos.toByteArray());
