@@ -137,9 +137,9 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void printQRCode(String value, Promise promise) {
+    public void printQRCode(String value, int size, Promise promise) {
         try {
-            printerService.printQRCode(value);
+            printerService.printQRCode(value, size);
             promise.resolve(true);
         } catch (QRCodeException e) {
             promise.reject(e);
