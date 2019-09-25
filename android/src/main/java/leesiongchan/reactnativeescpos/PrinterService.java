@@ -191,6 +191,8 @@ public class PrinterService {
             boolean h3 = line.contains("{H3}");
             boolean lsm = line.contains("{LS:M}");
             boolean lsl = line.contains("{LS:L}");
+            boolean ct = line.contains("{C}");
+            boolean rt = line.contains("{R}");
             int charsOnLine = layoutBuilder.getCharsOnLine();
 
             // TODO: Shouldn't put it here
@@ -201,6 +203,13 @@ public class PrinterService {
             byte[] TXT_4SQUARE_NEW = new byte[] { 0x1d, '!', 0x11 };
             byte[] TXT_2HEIGHT_NEW = new byte[] { 0x1d, '!', 0x01 };
             byte[] TXT_2WIDTH_NEW = new byte[] { 0x1d, '!', 0x10 };
+            byte[] LINE_SPACE_68 = new byte[] { 0x1b, 0x33, 68 };
+            byte[] LINE_SPACE_88 = new byte[] { 0x1b, 0x33, 120 };
+            byte[] DEFAULT_LINE_SPACE = new byte[] { 0x1b, 50 };
+
+            baos.write(ESC_t);
+            baos.write(FS_and);
+            baos.write(ESC_M);
 
             // Add tags
             if (bold) {
@@ -213,13 +222,16 @@ public class PrinterService {
             }
             if (h1) {
                 baos.write(TXT_4SQUARE_NEW);
+                baos.write(LINE_SPACE_88);
                 line = line.replace("{H1}", "");
                 charsOnLine = charsOnLine / 2;
             } else if (h2) {
                 baos.write(TXT_2HEIGHT_NEW);
+                baos.write(LINE_SPACE_88);
                 line = line.replace("{H2}", "");
             } else if (h3) {
                 baos.write(TXT_2WIDTH_NEW);
+                baos.write(LINE_SPACE_68);
                 line = line.replace("{H3}", "");
                 charsOnLine = charsOnLine / 2;
             }
@@ -230,10 +242,14 @@ public class PrinterService {
                 baos.write(LINE_SPACE_30);
                 line = line.replace("{LS:L}", "");
             }
-
-            baos.write(ESC_t);
-            baos.write(FS_and);
-            baos.write(ESC_M);
+            if (ct) {
+                baos.write(TXT_ALIGN_CT);
+                line = line.replace("{C}", "");
+            }
+            if (rt) {
+                baos.write(TXT_ALIGN_RT);
+                line = line.replace("{R}", "");
+            }
 
             try {
                 baos.write(layoutBuilder.createFromDesign(line, charsOnLine).getBytes("GBK"));
@@ -249,10 +265,14 @@ public class PrinterService {
                 baos.write(TXT_UNDERL_OFF);
             }
             if (h1 || h2 || h3) {
+                baos.write(DEFAULT_LINE_SPACE);
                 baos.write(TXT_NORMAL_NEW);
             }
             if (lsm || lsl) {
                 baos.write(LINE_SPACE_24);
+            }
+            if (ct || rt) {
+                baos.write(TXT_ALIGN_LT);
             }
         }
 

@@ -57,17 +57,19 @@ public class LayoutBuilder {
         while ((line = reader.readLine()) != null) {
             if (line.matches("---.*")) {
                 designText.append(createDivider(charsOnLine));
-            } else if (line.contains("{C}")) {
-                designText.append(
-                        createTextOnLine(line.trim().replace("{C}", ""), ' ', TEXT_ALIGNMENT_CENTER, charsOnLine));
-            } else if (line.contains("{R}")) {
-                designText.append(
-                        createTextOnLine(line.trim().replace("{R}", ""), ' ', TEXT_ALIGNMENT_RIGHT, charsOnLine));
+            // } else if (line.contains("{C}")) {
+            //     designText.append(
+            //             createTextOnLine(line.trim().replace("{C}", ""), ' ', TEXT_ALIGNMENT_CENTER, charsOnLine));
+            // } else if (line.contains("{R}")) {
+            //     designText.append(
+            //             createTextOnLine(line.trim().replace("{R}", ""), ' ', TEXT_ALIGNMENT_RIGHT, charsOnLine));
             } else if (line.contains("{<>}")) {
                 String[] splitLine = line.split("\\{<>\\}");
                 designText.append(createMenuItem(splitLine[0], splitLine[1], ' ', charsOnLine));
             } else {
-                designText.append(createTextOnLine(line, ' ', TEXT_ALIGNMENT_LEFT, charsOnLine));
+                designText.append(line);
+                designText.append("\n");
+                // designText.append(createTextOnLine(line, ' ', TEXT_ALIGNMENT_LEFT, charsOnLine));
             }
         }
 
