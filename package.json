@@ -24,6 +24,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "dependencies": {
+    "buffer": "^4.6.0"
+  },
   "devDependencies": {
     "react": "^16.5.0",
     "react-native": "^0.59.4"
