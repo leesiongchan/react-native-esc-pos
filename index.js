@@ -1,5 +1,5 @@
 import { DeviceEventEmitter, NativeModules } from 'react-native';
-
+const { Buffer } = require('buffer')
 const { LayoutBuilder } = NativeModules;
 
 const EscPos = {
@@ -26,6 +26,12 @@ const EscPos = {
     } else {
       return NativeModules.EscPos.connectNetworkPrinter(address, port);
     }
+  },
+  write(data) {
+    if (typeof data === 'string') {
+      data = new Buffer(data)
+    }
+    return NativeModules.EscPos.write(data.toString('base64'))
   },
 };
 
