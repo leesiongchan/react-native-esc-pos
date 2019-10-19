@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Base64;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -157,8 +158,9 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void write(byte[] command, Promise promise) {
-        printerService.write(command);
+    public void write(String message, Promise promise) {
+        byte[] data = Base64.decode(message, Base64.DEFAULT);
+        printerService.write(data);
         promise.resolve(true);
     }
 
