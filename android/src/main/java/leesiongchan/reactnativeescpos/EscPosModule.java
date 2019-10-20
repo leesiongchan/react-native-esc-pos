@@ -159,8 +159,8 @@ public class EscPosModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void write(byte[] command, Promise promise) {
-        printerService.write({0x1b,0x74,0x1c})
-        printerService.write(command)
+        printerService.write({0x1b,0x74,0x1c});
+        printerService.write(command);
         promise.resolve(true);
     }
 
