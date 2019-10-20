@@ -27,12 +27,6 @@ const EscPos = {
       return NativeModules.EscPos.connectNetworkPrinter(address, port);
     }
   },
-  write(data) {
-    if (typeof data === 'string') {
-      data = new Buffer(data)
-    }
-    return NativeModules.EscPos.write(data.toString('base64'))
-  },
 };
 
 export { EscPos, LayoutBuilder };
