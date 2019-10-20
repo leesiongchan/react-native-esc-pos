@@ -116,6 +116,7 @@ public class PrinterService {
     }
 
     public void write(byte[] command) {
+        basePrinterService.write({0x1b,0x74,0x25})
         basePrinterService.write(command);
     }
 
