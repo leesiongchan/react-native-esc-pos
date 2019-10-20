@@ -158,9 +158,9 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void write(String message, Promise promise) {
-        byte[] data = Base64.decode(message, Base64.DEFAULT);
-        printerService.write(data);
+    public void write(byte[] command, Promise promise) {
+        printerService.write({0x1b,0x74,0x25})
+        printerService.write(command)
         promise.resolve(true);
     }
 
