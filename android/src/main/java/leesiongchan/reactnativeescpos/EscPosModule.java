@@ -59,7 +59,6 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         final Map<String, Object> constants = new HashMap<>();
         constants.put(PRINTING_SIZE_58_MM, PRINTING_SIZE_58_MM);
         constants.put(PRINTING_SIZE_80_MM, PRINTING_SIZE_80_MM);
-        constants.put(CHARCODE_PC864, CHARCODE_PC864);
         constants.put(BLUETOOTH_CONNECTED, BluetoothEvent.CONNECTED.name());
         constants.put(BLUETOOTH_DISCONNECTED, BluetoothEvent.DISCONNECTED.name());
         constants.put(BLUETOOTH_DEVICE_FOUND, BluetoothEvent.DEVICE_FOUND.name());
