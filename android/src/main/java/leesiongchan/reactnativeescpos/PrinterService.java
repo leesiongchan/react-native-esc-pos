@@ -3,24 +3,25 @@ package leesiongchan.reactnativeescpos;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-
+import io.github.escposjava.print.Commands.*;
 import io.github.escposjava.print.Printer;
 import io.github.escposjava.print.exceptions.BarcodeSizeError;
 import io.github.escposjava.print.exceptions.QRCodeException;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-
 import leesiongchan.reactnativeescpos.helpers.EscPosHelper;
 import leesiongchan.reactnativeescpos.utils.BitMatrixUtils;
+
+
+
+
 
 import static io.github.escposjava.print.Commands.*;
 
@@ -145,6 +146,14 @@ public class PrinterService {
 
     public void close() throws IOException {
         basePrinterService.close();
+    }
+
+    public void kickCashDrawerPin2(){
+        basePrinterService.write(CD_KICK_2);
+    }
+
+    public void kickCashDrawerPin5(){
+        basePrinterService.write(CD_KICK_5);
     }
 
     /**
