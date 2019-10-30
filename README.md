@@ -85,6 +85,8 @@ async function testPrinter() {
     await EscPos.cutFull();
     // Beep!
     await EscPos.beep();
+    // Kick the drawer! Can be either `kickCashDrawerPin2` or `kickCashDrawerPin5`
+    await EscPos.kickCashDrawerPin2();
     // Disconnect
     await EscPos.disconnect();
   } catch (error) {
