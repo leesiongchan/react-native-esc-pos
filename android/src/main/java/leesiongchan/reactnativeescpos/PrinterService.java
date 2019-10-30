@@ -7,7 +7,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import io.github.escposjava.print.Commands.*;
 import io.github.escposjava.print.Printer;
 import io.github.escposjava.print.exceptions.BarcodeSizeError;
 import io.github.escposjava.print.exceptions.QRCodeException;
@@ -18,11 +17,6 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import leesiongchan.reactnativeescpos.helpers.EscPosHelper;
 import leesiongchan.reactnativeescpos.utils.BitMatrixUtils;
-
-
-
-
-
 import static io.github.escposjava.print.Commands.*;
 
 public class PrinterService {
