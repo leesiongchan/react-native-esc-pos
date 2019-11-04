@@ -57,6 +57,10 @@ public class LayoutBuilder {
         while ((line = reader.readLine()) != null) {
             if (line.matches("---.*")) {
                 designText.append(createDivider(charsOnLine));
+            } else if (line.matches("===.*")){
+                designText.append(createDivider('=',charsOnLine));
+            } else if (line.contains("{RP:")) {
+                designText.append(createCustomNumberOfString(line));
             // } else if (line.contains("{C}")) {
             //     designText.append(
             //             createTextOnLine(line.trim().replace("{C}", ""), ' ', TEXT_ALIGNMENT_CENTER, charsOnLine));
@@ -86,6 +90,29 @@ public class LayoutBuilder {
         }
 
         return createTextOnLine(' ' + text + ' ', accent, TEXT_ALIGNMENT_CENTER, charsOnLine);
+    }
+
+    public String createCustomNumberOfString(String text) {
+        String symbol = "", count = "0";
+
+        if (text.contains("{RP:")) {
+            symbol = text.substring(0,text.indexOf("{RP:"));
+            count = text.substring(text.indexOf("{RP:") + 4, text.indexOf('}'));
+        }
+
+        if (text.contains("{C}")) {
+            return createTextOnLine(createCustomNumberOfString(symbol, count), ' ', TEXT_ALIGNMENT_CENTER, charsOnLine);
+        } else if (text.contains("{R}")) {
+            return createTextOnLine(createCustomNumberOfString(symbol, count), ' ', TEXT_ALIGNMENT_RIGHT, charsOnLine);
+        }
+
+        return createCustomNumberOfString(symbol, count);
+    }
+
+    public String createCustomNumberOfString(String text, String count) {
+        int intNum = 0;
+        intNum = Integer.parseInt(count);
+        return StringUtils.repeat(text, intNum);
     }
 
     public String createDivider() {
