@@ -148,6 +148,21 @@ Device MAC Address:
 
 - event.deviceInfo.macAddress
 
+## New Feature
+- You can now easily duplicate a string or character and print onto your design.
+- Introducing Repeat feature:
+> Main tag {RP: number of times to duplicate required: string or character to duplicate}
+> Example: 
+> Input {RP:5:*}
+> Output: *****
+
+> If you have few characters to duplicate in a line and some text within the line you wouldn't want to disturb, you can do it as per below:
+> Example: 
+> Input: {RP:3:= }This is a test string{RP:2:@_@}
+> Output: = = = This is a test string@_@@_@
+
+> Important note: this feature does not support repetitive printing of Closing Curly Bracket }. 
+
 ## TODO
 
 - [x] Android support
