@@ -163,7 +163,7 @@ public class LayoutBuilder {
             text = text.replace(text.substring(text.indexOf(replaceRepeatTag),text.indexOf(replaceRepeatTag)+replaceRepeatTag.length()), repeatedSymbol);
         }
 
-        return text;
+        return text + "\n";
     }
 
     public void setCharsOnLine(int charsOnLine) {
