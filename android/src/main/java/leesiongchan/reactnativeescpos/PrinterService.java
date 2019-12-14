@@ -52,7 +52,7 @@ public class PrinterService {
     }
 
     public void print(String text) throws UnsupportedEncodingException {
-        write(text.getBytes("GBK"));
+        write(text.getBytes("Cp864"));
     }
 
     public void printLn(String text) throws UnsupportedEncodingException {
