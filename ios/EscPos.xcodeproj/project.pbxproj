@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0481E3BA2435CBCF00982F5A /* libeposeasyselect.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0481E3B82435CBCC00982F5A /* libeposeasyselect.a */; };
+		0481E3BB2435CBCF00982F5A /* libepos2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0481E3B92435CBCF00982F5A /* libepos2.a */; };
+		0481E3BE2435CC2400982F5A /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0481E3BD2435CC2400982F5A /* ExternalAccessory.framework */; };
+		0481E3C02435CC3200982F5A /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0481E3BF2435CC3200982F5A /* libxml2.2.tbd */; };
 		B3E7B58A1CC2AC0600A0062D /* EscPos.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* EscPos.m */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +27,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0481E3B82435CBCC00982F5A /* libeposeasyselect.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libeposeasyselect.a; sourceTree = "<group>"; };
+		0481E3B92435CBCF00982F5A /* libepos2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libepos2.a; sourceTree = "<group>"; };
+		0481E3BD2435CC2400982F5A /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/ExternalAccessory.framework; sourceTree = DEVELOPER_DIR; };
+		0481E3BF2435CC3200982F5A /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/usr/lib/libxml2.2.tbd; sourceTree = DEVELOPER_DIR; };
+		0481E3CD2435D83100982F5A /* ePOSEasySelect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ePOSEasySelect.h; sourceTree = "<group>"; };
+		0481E3CE2435D83100982F5A /* ePOS2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ePOS2.h; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libEscPos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEscPos.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5881CC2AC0600A0062D /* EscPos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EscPos.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* EscPos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EscPos.m; sourceTree = "<group>"; };
@@ -33,12 +43,36 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0481E3C02435CC3200982F5A /* libxml2.2.tbd in Frameworks */,
+				0481E3BE2435CC2400982F5A /* ExternalAccessory.framework in Frameworks */,
+				0481E3BA2435CBCF00982F5A /* libeposeasyselect.a in Frameworks */,
+				0481E3BB2435CBCF00982F5A /* libepos2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0481E3B72435CB9200982F5A /* EposLib */ = {
+			isa = PBXGroup;
+			children = (
+				0481E3B92435CBCF00982F5A /* libepos2.a */,
+				0481E3B82435CBCC00982F5A /* libeposeasyselect.a */,
+				0481E3CE2435D83100982F5A /* ePOS2.h */,
+				0481E3CD2435D83100982F5A /* ePOSEasySelect.h */,
+			);
+			path = EposLib;
+			sourceTree = "<group>";
+		};
+		0481E3BC2435CC2400982F5A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0481E3BF2435CC3200982F5A /* libxml2.2.tbd */,
+				0481E3BD2435CC2400982F5A /* ExternalAccessory.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -50,9 +84,11 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				0481E3B72435CB9200982F5A /* EposLib */,
 				B3E7B5881CC2AC0600A0062D /* EscPos.h */,
 				B3E7B5891CC2AC0600A0062D /* EscPos.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
+				0481E3BC2435CC2400982F5A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -95,6 +131,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 58B511D21A9E6C8500147676;
@@ -216,12 +253,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
-				"$(inherited)",
+					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/EposLib",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = EscPos;
 				SKIP_INSTALL = YES;
@@ -237,7 +277,10 @@
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/EposLib",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = EscPos;
 				SKIP_INSTALL = YES;
