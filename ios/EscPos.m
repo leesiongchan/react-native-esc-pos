@@ -105,6 +105,61 @@ RCT_EXPORT_METHOD(setPrintingSize:(NSString *)printingSize resolver:(RCTPromiseR
     }
 }
 
+RCT_EXPORT_METHOD(setTextDensity:(int)textDensity resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSLog(@"setTextDensity--%d",textDensity);
+    @try{
+        NSMutableDictionary *dictSettings = [[NSMutableDictionary alloc]init];
+
+        // // 0 to 8 (0-3 = smaller, 4 = default, 5-8 = larger)
+        
+        switch(textDensity) {
+        case 0:
+                [dictSettings setObject:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY_70] forKey:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY]];
+
+            break;
+        case 1:
+                [dictSettings setObject:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY_80] forKey:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY]];
+
+            break;
+        case 2:
+                [dictSettings setObject:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY_85] forKey:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY]];
+
+            break;
+        case 3:
+                [dictSettings setObject:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY_90] forKey:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY]];
+
+            break;
+        case 4:
+                [dictSettings setObject:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY_100] forKey:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY]];
+
+            break;
+        case 5:
+                [dictSettings setObject:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY_110] forKey:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY]];
+
+            break;
+        case 6:
+                [dictSettings setObject:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY_120] forKey:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY]];
+
+            break;
+        case 7:
+                [dictSettings setObject:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY_125] forKey:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY]];
+
+            break;
+        case 8:
+                [dictSettings setObject:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY_130] forKey:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PRINTDENSITY]];
+
+        }
+        NSLog(@"dictSettings--%@",dictSettings);
+        [eposPrinter setPrinterSetting:EPOS2_PARAM_DEFAULT setttingList:dictSettings delegate:self];
+        
+        resolve(@"Done");
+    }
+    @catch(NSError *e){
+        reject(nil, nil, e);
+    }
+}
+
 - (BOOL)eposPrinterConnect:(NSString *)address port:(int)port {
     
     if (eposPrinter!=nil) {
