@@ -5,7 +5,7 @@
 
 
 
-@interface EscPos ()<Epos2DiscoveryDelegate, Epos2PtrStatusChangeDelegate, Epos2PtrReceiveDelegate>{
+@interface EscPos ()<Epos2DiscoveryDelegate, Epos2PtrStatusChangeDelegate, Epos2PtrReceiveDelegate, Epos2PrinterSettingDelegate>{
 
   Epos2Printer *eposPrinter;
   BOOL isBluetoothPrinter;
@@ -17,6 +17,19 @@
 
 @implementation EscPos
 
+static NSString * _PRINTING_SIZE_58_MM = @"_PRINTING_SIZE_58_MM";
+static NSString * _PRINTING_SIZE_80_MM = @"_PRINTING_SIZE_80_MM";
+
+
++ (BOOL)requiresMainQueueSetup
+{
+  return YES;  // only do this if your module initialization relies on calling UIKit!
+}
+
+- (NSDictionary *)constantsToExport
+{
+  return @{ @"PRINTING_SIZE_58_MM": _PRINTING_SIZE_58_MM, @"PRINTING_SIZE_80_MM": _PRINTING_SIZE_80_MM};
+}
 
 RCT_EXPORT_MODULE()
 
@@ -62,6 +75,35 @@ RCT_EXPORT_METHOD(connectBluetoothPrinter:(NSString *)address resolver:(RCTPromi
       }
 }
 
+RCT_EXPORT_METHOD(setPrintingSize:(NSString *)printingSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSLog(@"printingSize--%@",printingSize);
+    @try{
+        int result = EPOS2_SUCCESS;
+
+        NSMutableDictionary *dictSettings = [[NSMutableDictionary alloc]init];
+        if([printingSize isEqualToString:PRINTING_SIZE_58_MM]) {
+            
+            [dictSettings setObject:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PAPERWIDTH_58_0] forKey:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PAPERWIDTH]];
+        }
+        else if([printingSize isEqualToString:_PRINTING_SIZE_80_MM]) {
+        
+            [dictSettings setObject:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PAPERWIDTH_80_0] forKey:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PAPERWIDTH]];
+
+        }
+        
+        result = [eposPrinter setPrinterSetting:EPOS2_PARAM_DEFAULT setttingList:dictSettings delegate:self];
+        if(result != EPOS2_SUCCESS){
+            NSLog(@"setPrinterSetting error --%d",result);
+            return;
+        }
+        
+        resolve(@"Done");
+    }
+    @catch(NSError *e){
+        reject(nil, nil, e);
+    }
+}
 
 - (BOOL)eposPrinterConnect:(NSString *)address port:(int)port {
     
@@ -167,6 +209,18 @@ RCT_EXPORT_METHOD(connectBluetoothPrinter:(NSString *)address resolver:(RCTPromi
 
 }
 
-@end
+- (void) onGetPrinterSetting:(int)code type:(int)Type value:(int)value{
+    NSLog(@"value--%d",value);
+}
 
+- (void)onSetPrinterSetting:(int)code {
+    if(code != EPOS2_CODE_SUCCESS){
+        NSLog(@"print setting set error");
+        return;
+    }else{
+        NSLog(@"print setting set succesfully");
+    }
+}
+
+@end
 
