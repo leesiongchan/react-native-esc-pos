@@ -33,12 +33,6 @@ static NSString * _PRINTING_SIZE_80_MM = @"_PRINTING_SIZE_80_MM";
 
 RCT_EXPORT_MODULE()
 
-//RCT_EXPORT_METHOD(sampleMethod:(NSString *)stringArgument numberParameter:(nonnull NSNumber *)numberArgument callback:(RCTResponseSenderBlock)callback)
-//{
-//    // TODO: Implement some real useful functionality
-//    callback(@[[NSString stringWithFormat: @"numberArgument: %@ stringArgument: %@", numberArgument, stringArgument]]);
-//}
-
 RCT_EXPORT_METHOD(setConfig:(NSDictionary *)config)
 {
     NSString *strPrinterType = [config valueForKey:@"type"];
@@ -73,6 +67,24 @@ RCT_EXPORT_METHOD(connectBluetoothPrinter:(NSString *)address resolver:(RCTPromi
       @catch(NSError *e){
           reject(nil, nil, e);
       }
+}
+
+RCT_EXPORT_METHOD(disconnect:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    @try {
+        [self disconnectCurrentPrinter];
+        resolve(@"Success");
+    } @catch (NSError *e) {
+        reject(nil, nil, e);
+    }
+}
+
+RCT_EXPORT_METHOD(printSample:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    @try {
+        [self printSampleText];
+        resolve(@"Success");
+    } @catch (NSError *e) {
+        reject(nil, nil, e);
+    }
 }
 
 RCT_EXPORT_METHOD(setPrintingSize:(NSString *)printingSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
@@ -216,6 +228,50 @@ RCT_EXPORT_METHOD(setTextDensity:(int)textDensity resolver:(RCTPromiseResolveBlo
   }
     
   return YES;
+}
+
+-(BOOL)printSampleText{
+    {
+      int result = EPOS2_SUCCESS;
+      Epos2PrinterStatusInfo *status = nil;
+      
+      if (eposPrinter == nil) {
+        return NO;
+      }
+      status = [eposPrinter getStatus];
+      [self dispPrinterWarnings:status];
+      
+      if (![self isPrintable:status]) {
+        [eposPrinter disconnect];
+        return NO;
+      }
+      
+      [eposPrinter addTextAlign:EPOS2_ALIGN_CENTER];
+      [eposPrinter addText:[NSString stringWithFormat:@"\n This is sample print text to verify \n printer is connected successfully \n \n \n"]];
+      if (result != EPOS2_SUCCESS) {
+        return NO;
+      }
+      
+      result = [eposPrinter addCut:EPOS2_CUT_FEED];
+      if (result != EPOS2_SUCCESS) {
+        return NO;
+      }
+      result = [eposPrinter sendData:EPOS2_PARAM_DEFAULT];
+
+      if (result != EPOS2_SUCCESS) {
+        [eposPrinter disconnect];
+        return NO;
+      }
+      return YES;
+    }
+}
+
+- (void)disconnectCurrentPrinter
+{
+      if (eposPrinter == nil) {
+        return;
+      }
+      [eposPrinter disconnect];
 }
 
 - (void)dispPrinterWarnings:(Epos2PrinterStatusInfo *)status
