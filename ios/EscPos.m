@@ -3,8 +3,6 @@
 #import "ePOS2.h"
 #import "ePOSEasySelect.h"
 
-
-
 @interface EscPos ()<Epos2DiscoveryDelegate, Epos2PtrStatusChangeDelegate, Epos2PtrReceiveDelegate, Epos2PrinterSettingDelegate>{
 
   Epos2Printer *eposPrinter;
@@ -43,7 +41,7 @@ RCT_EXPORT_METHOD(setConfig:(NSDictionary *)config)
              isBluetoothPrinter = NO;
         }
     }else{
-             isBluetoothPrinter = NO;
+         isBluetoothPrinter = NO;
     }
 }
 
@@ -172,60 +170,168 @@ RCT_EXPORT_METHOD(setTextDensity:(int)textDensity resolver:(RCTPromiseResolveBlo
     }
 }
 
+RCT_EXPORT_METHOD(printImage:
+                    (id)url
+                  resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+
+    [NSData ertc_dataWithContentsOfStringURL:url onCompletionHandler:^(UIImage * _Nullable data) {
+        @try {
+        [self printData: data];
+        resolve(@"Success");
+        } @catch (NSError *e) {
+        reject(nil, nil, e);
+        }
+    } ];
+}
+
+- (BOOL)printData: (UIImage *)imgae
+{
+    int result = EPOS2_SUCCESS;
+    Epos2PrinterStatusInfo *status = nil;
+
+    if (eposPrinter == nil) {
+    return NO;
+    }
+  
+  
+    status = [eposPrinter getStatus];
+    [self dispPrinterWarnings:status];
+
+    if (![self isPrintable:status]) {
+        [eposPrinter disconnect];
+        return NO;
+    }
+  
+    UIImage *resizeImage = [UIImage new];
+    if ([printerPaperWidth isEqualToString:_PRINTING_SIZE_58_MM]) {
+        if (imgae.size.width > 384) {
+            resizeImage = [self makeImage:imgae width:384 height:imgae.size.height];
+        }
+        else {
+            resizeImage = imgae;
+        }
+    }
+    else if ([printerPaperWidth isEqualToString:_PRINTING_SIZE_80_MM]) {
+        if (imgae.size.width > 576) {
+            resizeImage = [self makeImage:imgae width:576 height:imgae.size.height];
+        }
+        else {
+            resizeImage = imgae;
+        }
+    }else{
+        resizeImage = imgae;
+    }
+
+    result = [eposPrinter addImage:resizeImage x:0 y:0
+                        width:resizeImage.size.width
+                       height:resizeImage.size.height
+                        color:EPOS2_COLOR_1
+                         mode:EPOS2_MODE_MONO
+                     halftone:EPOS2_HALFTONE_DITHER
+                   brightness:EPOS2_PARAM_DEFAULT
+                     compress:EPOS2_COMPRESS_AUTO];
+    
+    if (result != EPOS2_SUCCESS) {
+        return NO;
+    }
+
+    result = [eposPrinter addCut:EPOS2_CUT_FEED];
+    if (result != EPOS2_SUCCESS) {
+        return NO;
+    }
+    
+    result = [eposPrinter sendData:EPOS2_PARAM_DEFAULT];
+    if (result != EPOS2_SUCCESS) {
+        [eposPrinter disconnect];
+        return NO;
+    }
+    
+    return YES;
+}
+
+- (UIImage *)makeImage:(UIImage *)image width:(float)maxWidth height:(float)maxHeight {
+
+    float imageWidth = image.size.width;
+    float imageHeight = image.size.height;
+    float ratio = 1;
+
+    CGSize newSize = CGSizeMake(maxWidth, maxHeight);
+    UIGraphicsBeginImageContext(newSize);
+
+    if (imageWidth > maxWidth) {
+        ratio = maxWidth / imageWidth;
+        imageHeight = imageHeight * ratio;
+        imageWidth = imageWidth * ratio;
+    }
+
+    if (imageHeight > maxHeight) {
+        ratio = maxHeight / imageHeight;
+        imageHeight = imageHeight * ratio;
+        imageWidth = imageWidth * ratio;
+    }
+
+    [image drawInRect:CGRectMake(maxWidth / 2 - imageWidth / 2, maxHeight / 2 - imageHeight / 2, imageWidth, imageHeight)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    return newImage;
+}
+
 - (BOOL)eposPrinterConnect:(NSString *)address port:(int)port {
     
     if (eposPrinter!=nil) {
         eposPrinter = nil;
     }
-      eposPrinter = [[Epos2Printer alloc] initWithPrinterSeries:EPOS2_MODEL_ALL lang:EPOS2_MODEL_ANK];
-      [eposPrinter setReceiveEventDelegate:self];
-  
-  if (eposPrinter != nil) {
-    if (isBluetoothPrinter) {
-       address = [NSString stringWithFormat:@"BT:%@", address];
-    }
-    else if (address.length > 0) {
-      address = [NSString stringWithFormat:@"TCP:%@", address];
-    }
     
-    if (address.length > 0) {
-      int result = [eposPrinter connect:address timeout:EPOS2_PARAM_DEFAULT];
-      
-      if (result != EPOS2_SUCCESS) {
-        eposPrinter = nil;
-        NSLog(@"epos error: unable to connect error code - %d", result);
-        if (result == EPOS2_ERR_ILLEGAL) {
-          // Trying to reconnect one more time
-          NSLog(@"epos status: Trying to re-connect");
-          return [self eposPrinterConnect:address port:port];
+    eposPrinter = [[Epos2Printer alloc] initWithPrinterSeries:EPOS2_MODEL_ALL lang:EPOS2_MODEL_ANK];
+    [eposPrinter setReceiveEventDelegate:self];
+  
+    if (eposPrinter != nil) {
+        if (isBluetoothPrinter) {
+           address = [NSString stringWithFormat:@"BT:%@", address];
         }
-      }
-      
-      result = [eposPrinter beginTransaction];
-      
-      if (result != EPOS2_SUCCESS) {
-        eposPrinter = nil;
-        
-        NSLog(@"epos error: unable to connect error code - %d", result);
-        if (result == EPOS2_ERR_ILLEGAL) {
-          // Trying to reconnect one more time
-          NSLog(@"epos status: Trying to re-connect");
-          return [self eposPrinterConnect:address port:port];
+        else if (address.length > 0) {
+          address = [NSString stringWithFormat:@"TCP:%@", address];
         }
-        
-        return NO;
-      }
+
+        if (address.length > 0) {
+          int result = [eposPrinter connect:address timeout:EPOS2_PARAM_DEFAULT];
+          
+          if (result != EPOS2_SUCCESS) {
+            eposPrinter = nil;
+            NSLog(@"epos error: unable to connect error code - %d", result);
+            if (result == EPOS2_ERR_ILLEGAL) {
+              // Trying to reconnect one more time
+              NSLog(@"epos status: Trying to re-connect");
+              return [self eposPrinterConnect:address port:port];
+            }
+          }
+          
+          result = [eposPrinter beginTransaction];
+          
+          if (result != EPOS2_SUCCESS) {
+            eposPrinter = nil;
+            
+            NSLog(@"epos error: unable to connect error code - %d", result);
+            if (result == EPOS2_ERR_ILLEGAL) {
+              // Trying to reconnect one more time
+              NSLog(@"epos status: Trying to re-connect");
+              return [self eposPrinterConnect:address port:port];
+            }
+            
+            return NO;
+          }
+        }
+        else {
+          eposPrinter = nil;
+          NSLog(@"epos error: Address empty");
+          return NO;
+        }
     }
     else {
-      eposPrinter = nil;
-      NSLog(@"epos error: Address empty");
-      return NO;
+        NSLog(@"epos error: eposprinter object is null");
+        return NO;
     }
-  }
-  else {
-    NSLog(@"epos error: eposprinter object is null");
-    return NO;
-  }
     
   return YES;
 }
