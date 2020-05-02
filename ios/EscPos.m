@@ -136,7 +136,7 @@ RCT_EXPORT_METHOD(setPrintingSize:(NSString *)printingSize resolver:(RCTPromiseR
         int result = EPOS2_SUCCESS;
 
         NSMutableDictionary *dictSettings = [[NSMutableDictionary alloc]init];
-        if([printingSize isEqualToString:PRINTING_SIZE_58_MM]) {
+        if([printingSize isEqualToString:_PRINTING_SIZE_58_MM]) {
             
             [dictSettings setObject:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PAPERWIDTH_58_0] forKey:[NSNumber numberWithInt:EPOS2_PRINTER_SETTING_PAPERWIDTH]];
         }
