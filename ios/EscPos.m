@@ -3,6 +3,50 @@
 #import "ePOS2.h"
 #import "ePOSEasySelect.h"
 
+@interface NSData (Download)
+
++ (void) ertc_dataWithContentsOfStringURL:(nullable NSString* )strURL onCompletionHandler:(void (^)(UIImage * _Nullable data)) onCompletionHandler ;
+
+@end
+
+@implementation NSData (Download)
+
++ (void) ertc_dataWithContentsOfStringURL:(nullable NSString *)strURL onCompletionHandler:(void (^)(UIImage * _Nullable data)) onCompletionHandler {
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    __block NSData *dataDownloaded = [NSData new];
+    NSLog(@"ertc_dataWithContentsOfStringURL--%@",strURL);
+    if ([[NSFileManager defaultManager] fileExistsAtPath:strURL]) {
+     // dataDownloaded = [NSData dataWithContentsOfFile:strURL];
+      UIImage *_image =[UIImage imageWithContentsOfFile:strURL];
+
+
+      dispatch_async(dispatch_get_main_queue(), ^{
+        onCompletionHandler(_image);
+      });
+      
+    }else{
+        NSURL *dataURL = [NSURL URLWithString:strURL];
+        if (dataURL != nil) {
+            NSError *error = nil;
+            NSData *dataDownloading = [NSData dataWithContentsOfURL:dataURL options:NSDataReadingUncached error:&error];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error == nil) {
+                    dataDownloaded = dataDownloading;
+                    UIImage *image = [UIImage imageWithData:dataDownloaded];
+
+                    onCompletionHandler(image);
+                }else {
+                }
+            });
+        }
+    }
+  });
+}
+
+
+@end
+
+
 @interface EscPos ()<Epos2DiscoveryDelegate, Epos2PtrStatusChangeDelegate, Epos2PtrReceiveDelegate, Epos2PrinterSettingDelegate>{
 
   Epos2Printer *eposPrinter;
