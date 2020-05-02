@@ -7,7 +7,7 @@
 
   Epos2Printer *eposPrinter;
   BOOL isBluetoothPrinter;
-    
+  NSString *printerPaperWidth;
 }
 
 
@@ -278,7 +278,7 @@ RCT_EXPORT_METHOD(printImage:
 }
 
 - (BOOL)eposPrinterConnect:(NSString *)address port:(int)port {
-    
+    printerPaperWidth = _PRINTING_SIZE_58_MM;
     if (eposPrinter!=nil) {
         eposPrinter = nil;
     }
