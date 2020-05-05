@@ -80,7 +80,7 @@ async function testPrinter() {
     // Print your design!
     await EscPos.printDesign(design);
     // Print QR Code, you can specify the size
-    await EscPos.printQRCOde("Proxima b is the answer!", 200);
+    await EscPos.printQRCode("Proxima b is the answer!", 200);
     // Cut full!
     await EscPos.cutFull();
     // Beep!
