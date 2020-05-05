@@ -76,7 +76,7 @@ async function testPrinter() {
     // Cut half!
     await EscPos.cutPart();
     // You can also print image!
-    await EscPos.printImage(file.uri);
+    await EscPos.printImage(file.uri); // file.uri = "file:///longpath/xxx.jpg"
     // Print your design!
     await EscPos.printDesign(design);
     // Print QR Code, you can specify the size
