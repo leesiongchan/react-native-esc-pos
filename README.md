@@ -70,7 +70,7 @@ async function testPrinter() {
     // Once connected, you can setup your printing size, either `PRINTING_SIZE_58_MM` or `PRINTING_SIZE_80_MM`
     EscPos.setPrintingSize(EscPos.PRINTING_SIZE_80_MM);
     // 0 to 8 (0-3 = smaller, 4 = default, 5-8 = larger)
-    EscPos.setTextDensity(9);
+    EscPos.setTextDensity(8);
     // Test Print
     await EscPos.printSample();
     // Cut half!
@@ -120,6 +120,24 @@ EscPos.addListener("bluetoothDeviceFound", (event: any) => {
   }
 ```
 
+## Design Tags
+
+| Tag      | Description                                   |
+| -------- | :-------------------------------------------- |
+| {B}      | Bold.                                         |
+| {U}      | Underline.                                    |
+| {H1}     | Font Size. 2x2 / char                         |
+| {H2}     | Font Size. 1x2 / char                         |
+| {H3}     | Font Size. 2x1 / char                         |
+| {LS:<?>} | Linespace. M = 24LS, L = 30LS                 |
+| {C}      | Align text to center.                         |
+| {R}      | Align text to right.                          |
+| {RP:?:?} | Repeat text. Eg. {RP:5:a} will output "aaaaa" |
+| {QR[?]}  | Print QR code.                                |
+| {<>}     | Left-right text separation.                   |
+| {---}    | Create a "---" separator.                     |
+| {===}    | Create a "===" separator.                     |
+
 ## Events
 
 To listen to bluetooth state change
@@ -148,20 +166,21 @@ Device MAC Address:
 
 - event.deviceInfo.macAddress
 
-## New Feature
+## New Features
+
 - You can now easily duplicate a string or character and print onto your design.
 - Introducing Repeat feature:
-> Main tag {RP: number of times to duplicate required: string or character to duplicate}
-> Example: 
-> Input {RP:5:*}
-> Output: *****
+  > Main tag {RP: number of times to duplicate required: string or character to duplicate}
+  > Example:
+  > Input {RP:5:\*}
+  > Output: **\***
 
 > If you have few characters to duplicate in a line and some text within the line you wouldn't want to disturb, you can do it as per below:
-> Example: 
+> Example:
 > Input: {RP:3:= }This is a test string{RP:2:@_@}
-> Output: = = = This is a test string@_@@_@
+> Output: = = = This is a test string@_@@\_@
 
-> Important note: this feature does not support repetitive printing of Closing Curly Bracket }. 
+> Important note: this feature does not support repetitive printing of Closing Curly Bracket }.
 
 ## TODO
 
