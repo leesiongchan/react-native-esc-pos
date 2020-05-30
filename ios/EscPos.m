@@ -111,24 +111,6 @@ RCT_EXPORT_METHOD(connectBluetoothPrinter:(NSString *)address resolver:(RCTPromi
       }
 }
 
-RCT_EXPORT_METHOD(disconnect:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    @try {
-        [self disconnectCurrentPrinter];
-        resolve(@"Success");
-    } @catch (NSError *e) {
-        reject(nil, nil, e);
-    }
-}
-
-RCT_EXPORT_METHOD(printSample:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    @try {
-        [self printSampleText];
-        resolve(@"Success");
-    } @catch (NSError *e) {
-        reject(nil, nil, e);
-    }
-}
-
 RCT_EXPORT_METHOD(setPrintingSize:(NSString *)printingSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSLog(@"printingSize--%@",printingSize);
@@ -214,6 +196,19 @@ RCT_EXPORT_METHOD(setTextDensity:(int)textDensity resolver:(RCTPromiseResolveBlo
     }
 }
 
+RCT_EXPORT_METHOD(printSample:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    @try {
+        [self printSampleText];
+        resolve(@"Success");
+    } @catch (NSError *e) {
+        reject(nil, nil, e);
+    }
+}
+
+RCT_EXPORT_METHOD(cutPart){
+    [eposPrinter addCut:EPOS2_CUT_NO_FEED];
+}
+
 RCT_EXPORT_METHOD(printImage:
                     (id)url
                   resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
@@ -226,6 +221,19 @@ RCT_EXPORT_METHOD(printImage:
         reject(nil, nil, e);
         }
     } ];
+}
+
+RCT_EXPORT_METHOD(cutFull){
+    [eposPrinter addCut:EPOS2_CUT_FEED];
+}
+
+RCT_EXPORT_METHOD(disconnect:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    @try {
+        [self disconnectCurrentPrinter];
+        resolve(@"Success");
+    } @catch (NSError *e) {
+        reject(nil, nil, e);
+    }
 }
 
 - (BOOL)printData: (UIImage *)imgae
