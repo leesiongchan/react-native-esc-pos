@@ -48,10 +48,10 @@
 
 
 @interface EscPos ()<Epos2DiscoveryDelegate, Epos2PtrStatusChangeDelegate, Epos2PtrReceiveDelegate, Epos2PrinterSettingDelegate>{
-
-  Epos2Printer *eposPrinter;
-  BOOL isBluetoothPrinter;
-  NSString *printerPaperWidth;
+    Epos2Printer *eposPrinter;
+    BOOL isBluetoothPrinter;
+    BOOL isOpenCashDrawer;
+    NSString *printerPaperWidth;
 }
 
 
@@ -141,6 +141,10 @@ RCT_EXPORT_METHOD(setPrintingSize:(NSString *)printingSize resolver:(RCTPromiseR
     }
 }
 
+RCT_EXPORT_METHOD(getPrintingSize){
+    
+}
+
 RCT_EXPORT_METHOD(setTextDensity:(int)textDensity resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSLog(@"setTextDensity--%d",textDensity);
@@ -196,6 +200,10 @@ RCT_EXPORT_METHOD(setTextDensity:(int)textDensity resolver:(RCTPromiseResolveBlo
     }
 }
 
+RCT_EXPORT_METHOD(getTextDensity){
+    
+}
+
 RCT_EXPORT_METHOD(printSample:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     @try {
         [self printSampleText];
@@ -225,6 +233,10 @@ RCT_EXPORT_METHOD(printImage:
 
 RCT_EXPORT_METHOD(cutFull){
     [eposPrinter addCut:EPOS2_CUT_FEED];
+}
+
+RCT_EXPORT_METHOD(kickCashDrawer) {
+  [self cashDrawer];
 }
 
 RCT_EXPORT_METHOD(disconnect:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
@@ -422,6 +434,24 @@ RCT_EXPORT_METHOD(disconnect:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromis
       }
       return YES;
     }
+}
+
+-(void)cashDrawer {
+  Epos2PrinterStatusInfo *status = nil;
+
+  status = [eposPrinter getStatus];
+  [self dispPrinterWarnings:status];
+  
+  if ([self isPrintable:status]) {
+    Epos2Printer *builder = eposPrinter;
+    [builder addPulse:EPOS2_DRAWER_2PIN time: EPOS2_PULSE_100]; // Adding pulse to builder to open cash drawer
+    
+  }else{
+
+  // update to RN code no printer is connected
+   // [self sendEventWithName:@"printStatusCashDrawer" body:@{@"printStatusCashDrawer": @false}];
+      
+  }
 }
 
 - (void)disconnectCurrentPrinter
