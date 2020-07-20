@@ -48,8 +48,8 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     public EscPosModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
-
         scanManager = new ScanManager(reactContext, BluetoothAdapter.getDefaultAdapter());
+        System.out.println("Injected!");
     }
 
     @Override
@@ -224,6 +224,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             }
             Printer printer = new BluetoothPrinter(address);
             printerService = new PrinterService(printer);
+            printerService.setContext(reactContext);
             promise.resolve(true);
         } catch (IOException e) {
             promise.reject(e);
@@ -238,6 +239,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             }
             Printer printer = new NetworkPrinter(address, port);
             printerService = new PrinterService(printer);
+            printerService.setContext(reactContext);
             promise.resolve(true);
         } catch (IOException e) {
             promise.reject(e);

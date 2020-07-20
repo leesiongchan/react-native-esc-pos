@@ -4,10 +4,15 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(sampleMethod:(NSString *)stringArgument numberParameter:(nonnull NSNumber *)numberArgument callback:(RCTResponseSenderBlock)callback)
-{
-    // TODO: Implement some real useful functionality
-    callback(@[[NSString stringWithFormat: @"numberArgument: %@ stringArgument: %@", numberArgument, stringArgument]]);
+//exports a method getDeviceName to javascript
+RCT_EXPORT_METHOD(getDeviceName:(RCTResponseSenderBlock)callback){
+ @try{
+   NSString *deviceName = [[UIDevice currentDevice] name];
+   callback(@[[NSNull null], deviceName]);
+ }
+ @catch(NSException *exception){
+   callback(@[exception.reason, [NSNull null]]);
+ }
 }
 
 @end
