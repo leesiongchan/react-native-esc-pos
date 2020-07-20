@@ -64,6 +64,7 @@ D0004           {<>}           Table #: A1
                               {H3} {R} x 1
 
 {QR[Where are the aliens?]}
+{IMG[file://the/path/to/yout/image/in/device.png]}
 `;
 
 async function testPrinter() {
@@ -142,6 +143,7 @@ EscPos.addListener("bluetoothDeviceFound", (event: any) => {
 | {R}      | Align text to right.                          |
 | {RP:?:?} | Repeat text. Eg. {RP:5:a} will output "aaaaa" |
 | {QR[?]}  | Print QR code.                                |
+| {IMG[?]} | Print IMAGE code from a path.                 |
 | {<>}     | Left-right text separation.                   |
 | {---}    | Create a "---" separator.                     |
 | {===}    | Create a "===" separator.                     |
@@ -200,3 +202,5 @@ Device MAC Address:
 - [ ] Serial port support
 - [ ] Add test
 - [x] Listen to the connection status
+- [x] Make QR and IMG tag can be combined with other tag in a line (eg: {C})
+- [ ] Scale IMG and QR Code from design tag
