@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import androidx.annotation.RequiresPermission;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -32,6 +34,7 @@ import static io.github.escposjava.print.Commands.*;
 
 public class EscPosModule extends ReactContextBaseJavaModule {
     public static final String PRINTING_SIZE_58_MM = "PRINTING_SIZE_58_MM";
+    public static final String PRINTING_SIZE_76_MM = "PRINTING_SIZE_76_MM";
     public static final String PRINTING_SIZE_80_MM = "PRINTING_SIZE_80_MM";
     public static final String BLUETOOTH_CONNECTED = "BLUETOOTH_CONNECTED";
     public static final String BLUETOOTH_DISCONNECTED = "BLUETOOTH_DISCONNECTED";
@@ -56,6 +59,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put(PRINTING_SIZE_58_MM, PRINTING_SIZE_58_MM);
+        constants.put(PRINTING_SIZE_76_MM, PRINTING_SIZE_76_MM);
         constants.put(PRINTING_SIZE_80_MM, PRINTING_SIZE_80_MM);
         constants.put(BLUETOOTH_CONNECTED, BluetoothEvent.CONNECTED.name());
         constants.put(BLUETOOTH_DISCONNECTED, BluetoothEvent.DISCONNECTED.name());
@@ -178,15 +182,20 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         int printingWidth;
 
         switch (printingSize) {
-        case PRINTING_SIZE_80_MM:
-            charsOnLine = LayoutBuilder.CHARS_ON_LINE_80_MM;
-            printingWidth = PrinterService.PRINTING_WIDTH_80_MM;
-            break;
+            case PRINTING_SIZE_80_MM:
+                charsOnLine = LayoutBuilder.CHARS_ON_LINE_80_MM;
+                printingWidth = PrinterService.PRINTING_WIDTH_80_MM;
+                break;
 
-        case PRINTING_SIZE_58_MM:
-        default:
-            charsOnLine = LayoutBuilder.CHARS_ON_LINE_58_MM;
-            printingWidth = PrinterService.PRINTING_WIDTH_58_MM;
+            case PRINTING_SIZE_76_MM:
+                charsOnLine = LayoutBuilder.CHARS_ON_LINE_76_MM;
+                printingWidth = PrinterService.PRINTING_WIDTH_76_MM;
+                break;
+
+            case PRINTING_SIZE_58_MM:
+            default:
+                charsOnLine = LayoutBuilder.CHARS_ON_LINE_58_MM;
+                printingWidth = PrinterService.PRINTING_WIDTH_58_MM;
         }
 
         printerService.setCharsOnLine(charsOnLine);
@@ -256,6 +265,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         }
     }
 
+    @SuppressWarnings({"MissingPermission"})
     @ReactMethod
     public void scanDevices() {
         scanManager.registerCallback(new ScanManager.OnBluetoothScanListener() {
@@ -297,6 +307,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     /**
      * Bluetooth Connection Event Listener
      */
+    @SuppressWarnings({"MissingPermission"})
     private BroadcastReceiver bluetoothConnectionEventListener = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String callbackAction = intent.getAction();
@@ -312,16 +323,16 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             BluetoothEvent bluetoothEvent;
 
             switch (callbackAction) {
-            case BluetoothDevice.ACTION_ACL_CONNECTED:
-                bluetoothEvent = BluetoothEvent.CONNECTED;
-                break;
+                case BluetoothDevice.ACTION_ACL_CONNECTED:
+                    bluetoothEvent = BluetoothEvent.CONNECTED;
+                    break;
 
-            case BluetoothDevice.ACTION_ACL_DISCONNECTED:
-                bluetoothEvent = BluetoothEvent.DISCONNECTED;
-                break;
+                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                    bluetoothEvent = BluetoothEvent.DISCONNECTED;
+                    break;
 
-            default:
-                bluetoothEvent = BluetoothEvent.NONE;
+                default:
+                    bluetoothEvent = BluetoothEvent.NONE;
             }
 
             // bluetooth event must not be null

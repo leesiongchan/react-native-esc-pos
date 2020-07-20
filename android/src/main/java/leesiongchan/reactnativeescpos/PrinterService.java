@@ -26,10 +26,13 @@ import static io.github.escposjava.print.Commands.*;
 
 public class PrinterService {
     public static final int PRINTING_WIDTH_58_MM = 384;
+    public static final int PRINTING_WIDTH_76_MM = 450;
     public static final int PRINTING_WIDTH_80_MM = 576;
     private static final String CARRIAGE_RETURN = System.getProperty("line.separator");
     private LayoutBuilder layoutBuilder = new LayoutBuilder();
     private final int DEFAULT_QR_CODE_SIZE = 200;
+    private final int DEFAULT_IMG_MAX_HEIGHT = 200;
+    private final int DEFAULT_IMG_WIDTH_OFFSET = 100;
     private int printingWidth = PRINTING_WIDTH_58_MM;
     private io.github.escposjava.PrinterService basePrinterService;
     private ReactApplicationContext context;
@@ -103,11 +106,9 @@ public class PrinterService {
     public Bitmap readImage(String filePath, ReactApplicationContext reactContext) throws IOException {
         Uri fileUri = Uri.parse(filePath);
         Bitmap image = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            image = ImageDecoder.decodeBitmap(ImageDecoder.createSource(reactContext.getContentResolver(), fileUri));
-        } else {
-            image = MediaStore.Images.Media.getBitmap(reactContext.getContentResolver(), fileUri);
-        }
+        BitmapFactory.Options op = new BitmapFactory.Options();
+        op.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        image = BitmapFactory.decodeFile(fileUri.getPath(), op);
         System.out.println(filePath);
         return image;
     }
@@ -117,7 +118,7 @@ public class PrinterService {
     }
 
     public void printImage(Bitmap image) throws IOException {
-        image = EscPosHelper.resizeImage(image, printingWidth / 4);
+        image = EscPosHelper.resizeImage(image, printingWidth - DEFAULT_IMG_WIDTH_OFFSET, DEFAULT_IMG_MAX_HEIGHT);
         ByteArrayOutputStream baos = generateImageByteArrayOutputStream(image);
         write(baos.toByteArray());
     }
@@ -207,7 +208,7 @@ public class PrinterService {
 
             if (line.matches(".*\\{IMG\\[(.+)\\]\\}.*")) {
                 try {
-                    imageToWrite = generateImageByteArrayOutputStream(EscPosHelper.resizeImage(readImage(line.replaceAll(".*\\{IMG\\[(.+)\\]\\}.*", "$1"),context),printingWidth / 4)).toByteArray();
+                    imageToWrite = generateImageByteArrayOutputStream(EscPosHelper.resizeImage(readImage(line.replaceAll(".*\\{IMG\\[(.+)\\]\\}.*", "$1"),context), printingWidth - DEFAULT_IMG_WIDTH_OFFSET, DEFAULT_IMG_MAX_HEIGHT)).toByteArray();
                 } catch (IOException e) {
                     throw new IOException(e);
                 }
