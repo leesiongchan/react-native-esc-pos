@@ -161,7 +161,7 @@ public class LayoutBuilder {
             repeatedSymbol = StringUtils.repeat(symbol, Integer.parseInt(count));
 
             String replaceRepeatTag = repeatTag + workingString + "}";
-            text = text.replace(text.substring(text.indexOf(replaceRepeatTag),text.indexOf(replaceRepeatTag)+replaceRepeatTag.length()), repeatedSymbol);
+            text = text.replaceFirst(Pattern.quote(text.substring(text.indexOf(replaceRepeatTag),text.indexOf(replaceRepeatTag)+replaceRepeatTag.length())), Matcher.quoteReplacement(repeatedSymbol));
         }
 
         return text + "\n";
