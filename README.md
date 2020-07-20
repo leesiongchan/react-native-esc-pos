@@ -13,6 +13,14 @@ It also has provide an intuitive way to design your layout, check below example 
 
 `$ react-native link @leesiongchan/react-native-esc-pos`
 
+### Android Bluetooth Permission
+Add following permission into AndroidManifest.xml
+```
+<uses-permission android:name="android.permission.BLUETOOTH"/>
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+```
+
 ### Manual installation
 
 #### iOS
