@@ -52,7 +52,6 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         super(reactContext);
         this.reactContext = reactContext;
         scanManager = new ScanManager(reactContext, BluetoothAdapter.getDefaultAdapter());
-        System.out.println("Injected!");
     }
 
     @Override
