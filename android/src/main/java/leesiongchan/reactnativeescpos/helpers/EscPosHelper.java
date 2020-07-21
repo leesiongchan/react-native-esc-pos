@@ -1,6 +1,10 @@
 package leesiongchan.reactnativeescpos.helpers;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ImageDecoder;
+import android.graphics.Paint;
 
 import java.io.ByteArrayOutputStream;
 
@@ -14,6 +18,7 @@ public class EscPosHelper {
      * @param image 2D array of pixels of the image (RGB, row major order).
      * @return 3 byte array with 24 dots (field set).
      */
+
     public static byte[] collectImageSlice(int y, int x, Bitmap image) {
         byte[] slices = new byte[] { 0, 0, 0 };
         for (int yy = y, i = 0; yy < y + 24 && i < 3; yy += 8, i++) { // repeat for 3 cycles
@@ -35,7 +40,7 @@ public class EscPosHelper {
 
     /**
      * Resizes a Bitmap image.
-     * 
+     *
      * @param image
      * @param width
      * @return new Bitmap image.
@@ -55,6 +60,25 @@ public class EscPosHelper {
             return newImage;
         }
 
+        return image;
+    }
+
+    public static Bitmap resizeImage(Bitmap image, int maxWidth, int maxHeight) {
+        if (maxHeight > 0 && maxWidth > 0) {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            float ratioBitmap = (float) width / (float) height;
+            float ratioMax = (float) maxWidth / (float) maxHeight;
+
+            int finalWidth = maxWidth;
+            int finalHeight = maxHeight;
+            if (ratioMax > ratioBitmap) {
+                finalWidth = (int) ((float)maxHeight * ratioBitmap);
+            } else {
+                finalHeight = (int) ((float)maxWidth / ratioBitmap);
+            }
+            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+        }
         return image;
     }
 
