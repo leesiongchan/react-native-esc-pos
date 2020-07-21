@@ -109,7 +109,6 @@ public class PrinterService {
         BitmapFactory.Options op = new BitmapFactory.Options();
         op.inPreferredConfig = Bitmap.Config.ARGB_8888;
         image = BitmapFactory.decodeFile(fileUri.getPath(), op);
-        System.out.println(filePath);
         return image;
     }
 
