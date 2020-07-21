@@ -64,6 +64,7 @@ D0004           {<>}           Table #: A1
                               {H3} {R} x 1
 
 {QR[Where are the aliens?]}
+{IMG[file://image/path/file.png]}
 `;
 
 async function testPrinter() {
@@ -142,6 +143,7 @@ EscPos.addListener("bluetoothDeviceFound", (event: any) => {
 | {R}      | Align text to right.                          |
 | {RP:?:?} | Repeat text. Eg. {RP:5:a} will output "aaaaa" |
 | {QR[?]}  | Print QR code.                                |
+| {IMG[?]} | Print image from a path.                      |
 | {<>}     | Left-right text separation.                   |
 | {---}    | Create a "---" separator.                     |
 | {===}    | Create a "===" separator.                     |
@@ -187,8 +189,15 @@ Device MAC Address:
 > Example:
 > Input: {RP:3:= }This is a test string{RP:2:@_@}
 > Output: = = = This is a test string@_@@\_@
-
+>
+> Example 2:
+> Input: {RP:3:-}This is a test string{RP:3:-}
+> Output: ---This is a test string---
+>
 > Important note: this feature does not support repetitive printing of Closing Curly Bracket }.
+
+- Print to 76mm Printer (Experimental)
+
 
 ## TODO
 
