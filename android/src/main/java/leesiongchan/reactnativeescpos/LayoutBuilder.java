@@ -17,6 +17,7 @@ public class LayoutBuilder {
     public static final String TEXT_ALIGNMENT_CENTER = "CENTER";
     public static final String TEXT_ALIGNMENT_RIGHT = "RIGHT";
     public static final int CHARS_ON_LINE_58_MM = 32;
+    public static final int CHARS_ON_LINE_76_MM = 42;
     public static final int CHARS_ON_LINE_80_MM = 48;
     private int charsOnLine = CHARS_ON_LINE_58_MM;
 
@@ -130,14 +131,14 @@ public class LayoutBuilder {
         }
 
         switch (alignment) {
-        case TEXT_ALIGNMENT_RIGHT:
-            return StringUtils.leftPad(text, charsOnLine, space) + "\n";
+            case TEXT_ALIGNMENT_RIGHT:
+                return StringUtils.leftPad(text, charsOnLine, space) + "\n";
 
-        case TEXT_ALIGNMENT_CENTER:
-            return StringUtils.center(text, charsOnLine, space) + "\n";
+            case TEXT_ALIGNMENT_CENTER:
+                return StringUtils.center(text, charsOnLine, space) + "\n";
 
-        default:
-            return StringUtils.rightPad(text, charsOnLine, space) + "\n";
+            default:
+                return StringUtils.rightPad(text, charsOnLine, space) + "\n";
         }
     }
 
@@ -145,22 +146,22 @@ public class LayoutBuilder {
         String repeatTag = "{RP:";
         String regex = "\\"+repeatTag+"\\d+:.*?\\}";
         Matcher m = Pattern.compile(regex).matcher(text);
-        int tagCount = 0;	
-		while(m.find()){
-			tagCount++;
+        int tagCount = 0;
+        while(m.find()){
+            tagCount++;
         }
-        
+
         for(int x = 0; x < tagCount; x++){
             String symbol = "", count = "0", repeatedSymbol = "";
             int rpIndex = text.indexOf(repeatTag);
             String workingString = text.substring(rpIndex+(repeatTag.length()), text.indexOf('}'));
-			int separatorIdx = workingString.indexOf(':');
-	        count = workingString.substring(0,separatorIdx);
+            int separatorIdx = workingString.indexOf(':');
+            count = workingString.substring(0,separatorIdx);
             symbol = workingString.substring(separatorIdx+1, workingString.length());
             repeatedSymbol = StringUtils.repeat(symbol, Integer.parseInt(count));
 
             String replaceRepeatTag = repeatTag + workingString + "}";
-            text = text.replace(text.substring(text.indexOf(replaceRepeatTag),text.indexOf(replaceRepeatTag)+replaceRepeatTag.length()), repeatedSymbol);
+            text = text.replaceFirst(Pattern.quote(text.substring(text.indexOf(replaceRepeatTag),text.indexOf(replaceRepeatTag)+replaceRepeatTag.length())), Matcher.quoteReplacement(repeatedSymbol));
         }
 
         return text + "\n";

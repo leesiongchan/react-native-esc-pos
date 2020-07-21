@@ -71,13 +71,17 @@ public class LayoutBuilderModule extends ReactContextBaseJavaModule {
         int charsOnLine;
 
         switch (printingSize) {
-        case EscPosModule.PRINTING_SIZE_80_MM:
-            charsOnLine = LayoutBuilder.CHARS_ON_LINE_80_MM;
-            break;
+            case EscPosModule.PRINTING_SIZE_80_MM:
+                charsOnLine = LayoutBuilder.CHARS_ON_LINE_80_MM;
+                break;
 
-        case EscPosModule.PRINTING_SIZE_58_MM:
-        default:
-            charsOnLine = LayoutBuilder.CHARS_ON_LINE_58_MM;
+            case EscPosModule.PRINTING_SIZE_76_MM:
+                charsOnLine = LayoutBuilder.CHARS_ON_LINE_76_MM;
+                break;
+
+            case EscPosModule.PRINTING_SIZE_58_MM:
+            default:
+                charsOnLine = LayoutBuilder.CHARS_ON_LINE_58_MM;
         }
 
         layoutBuilder.setCharsOnLine(charsOnLine);
