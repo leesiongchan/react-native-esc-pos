@@ -3,11 +3,13 @@
 A React Native ESC/POS module to help you connect to your ESC/POS printer easily.
 It also has provide an intuitive way to design your layout, check below example to see how easy to get your layout ready!
 
+**iOS IS NOT READY**
+
 ## Getting started
 
 `$ yarn add @leesiongchan/react-native-esc-pos`
 
-** NOTE: Skip below installation guide if you are using React Native >= 0.60 **
+**NOTE: Skip below installation guide if you are using React Native >= 0.60**
 
 ### Mostly automatic installation
 
@@ -138,7 +140,7 @@ EscPos.addListener("bluetoothDeviceFound", (event: any) => {
 | {H1}     | Font Size. 2x2 / char                         |
 | {H2}     | Font Size. 1x2 / char                         |
 | {H3}     | Font Size. 2x1 / char                         |
-| {LS:<?>} | Linespace. M = 24LS, L = 30LS                 |
+| {LS:?}   | Linespace. M = 24LS, L = 30LS                 |
 | {C}      | Align text to center.                         |
 | {R}      | Align text to right.                          |
 | {RP:?:?} | Repeat text. Eg. {RP:5:a} will output "aaaaa" |
