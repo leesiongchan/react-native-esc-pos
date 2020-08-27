@@ -17,6 +17,7 @@ public class LayoutBuilder {
     public static final String TEXT_ALIGNMENT_CENTER = "CENTER";
     public static final String TEXT_ALIGNMENT_RIGHT = "RIGHT";
     public static final int CHARS_ON_LINE_58_MM = 32;
+    public static final int CHARS_ON_LINE_76_MM = 42;
     public static final int CHARS_ON_LINE_80_MM = 48;
     private int charsOnLine = CHARS_ON_LINE_58_MM;
 
@@ -57,12 +58,10 @@ public class LayoutBuilder {
         while ((line = reader.readLine()) != null) {
             if (line.matches("---.*")) {
                 designText.append(createDivider(charsOnLine));
-            // } else if (line.contains("{C}")) {
-            //     designText.append(
-            //             createTextOnLine(line.trim().replace("{C}", ""), ' ', TEXT_ALIGNMENT_CENTER, charsOnLine));
-            // } else if (line.contains("{R}")) {
-            //     designText.append(
-            //             createTextOnLine(line.trim().replace("{R}", ""), ' ', TEXT_ALIGNMENT_RIGHT, charsOnLine));
+            } else if (line.matches("===.*")){
+                designText.append(createDivider('=',charsOnLine));
+            } else if (line.contains("{RP:")) {
+                designText.append(duplicateStringSymbol(line));
             } else if (line.contains("{<>}")) {
                 String[] splitLine = line.split("\\{<>\\}");
                 designText.append(createMenuItem(splitLine[0], splitLine[1], ' ', charsOnLine));
@@ -87,6 +86,7 @@ public class LayoutBuilder {
 
         return createTextOnLine(' ' + text + ' ', accent, TEXT_ALIGNMENT_CENTER, charsOnLine);
     }
+
 
     public String createDivider() {
         return createDivider('-', charsOnLine);
@@ -131,15 +131,40 @@ public class LayoutBuilder {
         }
 
         switch (alignment) {
-        case TEXT_ALIGNMENT_RIGHT:
-            return StringUtils.leftPad(text, charsOnLine, space) + "\n";
+            case TEXT_ALIGNMENT_RIGHT:
+                return StringUtils.leftPad(text, charsOnLine, space) + "\n";
 
-        case TEXT_ALIGNMENT_CENTER:
-            return StringUtils.center(text, charsOnLine, space) + "\n";
+            case TEXT_ALIGNMENT_CENTER:
+                return StringUtils.center(text, charsOnLine, space) + "\n";
 
-        default:
-            return StringUtils.rightPad(text, charsOnLine, space) + "\n";
+            default:
+                return StringUtils.rightPad(text, charsOnLine, space) + "\n";
         }
+    }
+
+    public String duplicateStringSymbol(String text) {
+        String repeatTag = "{RP:";
+        String regex = "\\"+repeatTag+"\\d+:.*?\\}";
+        Matcher m = Pattern.compile(regex).matcher(text);
+        int tagCount = 0;
+        while(m.find()){
+            tagCount++;
+        }
+
+        for(int x = 0; x < tagCount; x++){
+            String symbol = "", count = "0", repeatedSymbol = "";
+            int rpIndex = text.indexOf(repeatTag);
+            String workingString = text.substring(rpIndex+(repeatTag.length()), text.indexOf('}'));
+            int separatorIdx = workingString.indexOf(':');
+            count = workingString.substring(0,separatorIdx);
+            symbol = workingString.substring(separatorIdx+1, workingString.length());
+            repeatedSymbol = StringUtils.repeat(symbol, Integer.parseInt(count));
+
+            String replaceRepeatTag = repeatTag + workingString + "}";
+            text = text.replaceFirst(Pattern.quote(text.substring(text.indexOf(replaceRepeatTag),text.indexOf(replaceRepeatTag)+replaceRepeatTag.length())), Matcher.quoteReplacement(repeatedSymbol));
+        }
+
+        return text + "\n";
     }
 
     public void setCharsOnLine(int charsOnLine) {

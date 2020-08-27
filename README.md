@@ -3,15 +3,25 @@
 A React Native ESC/POS module to help you connect to your ESC/POS printer easily.
 It also has provide an intuitive way to design your layout, check below example to see how easy to get your layout ready!
 
+**iOS IS NOT READY**
+
 ## Getting started
 
 `$ yarn add @leesiongchan/react-native-esc-pos`
 
-** NOTE: Skip below installation guide if you are using React Native >= 0.60 **
+**NOTE: Skip below installation guide if you are using React Native >= 0.60**
 
 ### Mostly automatic installation
 
 `$ react-native link @leesiongchan/react-native-esc-pos`
+
+### Android Bluetooth Permission
+Add following permission into AndroidManifest.xml
+```
+<uses-permission android:name="android.permission.BLUETOOTH"/>
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+```
 
 ### Manual installation
 
@@ -56,6 +66,7 @@ D0004           {<>}           Table #: A1
                               {H3} {R} x 1
 
 {QR[Where are the aliens?]}
+{IMG[file://image/path/file.png]}
 `;
 
 async function testPrinter() {
@@ -70,21 +81,23 @@ async function testPrinter() {
     // Once connected, you can setup your printing size, either `PRINTING_SIZE_58_MM` or `PRINTING_SIZE_80_MM`
     EscPos.setPrintingSize(EscPos.PRINTING_SIZE_80_MM);
     // 0 to 8 (0-3 = smaller, 4 = default, 5-8 = larger)
-    EscPos.setTextDensity(9);
+    EscPos.setTextDensity(8);
     // Test Print
     await EscPos.printSample();
     // Cut half!
     await EscPos.cutPart();
     // You can also print image!
-    await EscPos.printImage(file.uri);
+    await EscPos.printImage(file.uri); // file.uri = "file:///longpath/xxx.jpg"
     // Print your design!
     await EscPos.printDesign(design);
     // Print QR Code, you can specify the size
-    await EscPos.printQRCOde("Proxima b is the answer!", 200);
+    await EscPos.printQRCode("Proxima b is the answer!", 200);
     // Cut full!
     await EscPos.cutFull();
     // Beep!
     await EscPos.beep();
+    // Kick the drawer! Can be either `kickCashDrawerPin2` or `kickCashDrawerPin5`
+    await EscPos.kickCashDrawerPin2();
     // Disconnect
     await EscPos.disconnect();
   } catch (error) {
@@ -118,6 +131,25 @@ EscPos.addListener("bluetoothDeviceFound", (event: any) => {
   }
 ```
 
+## Design Tags
+
+| Tag      | Description                                   |
+| -------- | :-------------------------------------------- |
+| {B}      | Bold.                                         |
+| {U}      | Underline.                                    |
+| {H1}     | Font Size. 2x2 / char                         |
+| {H2}     | Font Size. 1x2 / char                         |
+| {H3}     | Font Size. 2x1 / char                         |
+| {LS:?}   | Linespace. M = 24LS, L = 30LS                 |
+| {C}      | Align text to center.                         |
+| {R}      | Align text to right.                          |
+| {RP:?:?} | Repeat text. Eg. {RP:5:a} will output "aaaaa" |
+| {QR[?]}  | Print QR code.                                |
+| {IMG[?]} | Print image from a path.                      |
+| {<>}     | Left-right text separation.                   |
+| {---}    | Create a "---" separator.                     |
+| {===}    | Create a "===" separator.                     |
+
 ## Events
 
 To listen to bluetooth state change
@@ -145,6 +177,29 @@ Device Name:
 Device MAC Address:
 
 - event.deviceInfo.macAddress
+
+## New Features
+
+- You can now easily duplicate a string or character and print onto your design.
+- Introducing Repeat feature:
+  > Main tag {RP: number of times to duplicate required: string or character to duplicate}
+  > Example:
+  > Input {RP:5:\*}
+  > Output: **\***
+
+> If you have few characters to duplicate in a line and some text within the line you wouldn't want to disturb, you can do it as per below:
+> Example:
+> Input: {RP:3:= }This is a test string{RP:2:@_@}
+> Output: = = = This is a test string@_@@\_@
+>
+> Example 2:
+> Input: {RP:3:-}This is a test string{RP:3:-}
+> Output: ---This is a test string---
+>
+> Important note: this feature does not support repetitive printing of Closing Curly Bracket }.
+
+- Print to 76mm Printer (Experimental)
+
 
 ## TODO
 
