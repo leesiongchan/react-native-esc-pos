@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.Math;
 
 import leesiongchan.reactnativeescpos.command.PrinterCommand;
 import leesiongchan.reactnativeescpos.helpers.EscPosHelper;
@@ -34,7 +35,7 @@ public class PrinterService {
     private LayoutBuilder layoutBuilder = new LayoutBuilder();
     private final int DEFAULT_QR_CODE_SIZE = 200;
     private final int DEFAULT_IMG_MAX_HEIGHT = 200;
-    private final int DEFAULT_IMG_WIDTH_OFFSET = 100;
+    private final int DEFAULT_IMG_WIDTH_OFFSET = 0;
 
     private final int DEFAULT_BAR_CODE_HEIGHT = 120;
     private final int DEFAULT_BAR_CODE_WIDTH = 3;
@@ -130,8 +131,18 @@ public class PrinterService {
         printImage(readImage(filePath, context));
     }
 
+    public void printImage(String filePath, int widthOffset) throws IOException {
+        printImage(readImage(filePath, context), widthOffset);
+    }
+
     public void printImage(Bitmap image) throws IOException {
         image = EscPosHelper.resizeImage(image, printingWidth - DEFAULT_IMG_WIDTH_OFFSET, DEFAULT_IMG_MAX_HEIGHT);
+        ByteArrayOutputStream baos = generateImageByteArrayOutputStream(image);
+        write(baos.toByteArray());
+    }
+
+    public void printImage(Bitmap image, int widthOffset) throws IOException {
+        image = EscPosHelper.resizeImage(image, Math.max(printingWidth - Math.abs(widthOffset), 0), DEFAULT_IMG_MAX_HEIGHT);
         ByteArrayOutputStream baos = generateImageByteArrayOutputStream(image);
         write(baos.toByteArray());
     }
