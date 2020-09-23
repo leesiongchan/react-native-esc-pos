@@ -244,7 +244,7 @@ public class PrinterService {
                         Pattern iwoPattern = Pattern.compile(iwoRegex);
                         Matcher matcher = iwoPattern.matcher(line);
                         offset = Integer.parseInt(matcher.group(1));
-                        line.replaceAll(iwoRegexm, "");
+                        line.replaceAll(iwoRegex, "");
                     }
                     imageToWrite = generateImageByteArrayOutputStream(
                         EscPosHelper.resizeImage(
