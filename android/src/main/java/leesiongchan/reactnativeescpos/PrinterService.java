@@ -239,12 +239,11 @@ public class PrinterService {
             if (line.matches(".*\\{IMG\\[(.+)\\]\\}.*")) {
                 try {
                     int offset = DEFAULT_IMG_WIDTH_OFFSET;
-                    String iwoRegex = ".*\\{IWO:\\(\\d+)\\}.*"; 
-                    if(line.matches(iwoRegex)) {
-                        Pattern iwoPattern = Pattern.compile(iwoRegex);
-                        Matcher matcher = iwoPattern.matcher(line);
+                    String iwoRegex = ".*\\{IWO:(\\d+)\\}.*"; 
+                    Pattern iwoPattern = Pattern.compile(iwoRegex);
+                    Matcher matcher = iwoPattern.matcher(line);
+                    if(matcher.find()) {
                         offset = Integer.parseInt(matcher.group(1));
-                        line.replaceAll(iwoRegex, "");
                     }
                     imageToWrite = generateImageByteArrayOutputStream(
                         EscPosHelper.resizeImage(
