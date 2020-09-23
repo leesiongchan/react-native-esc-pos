@@ -89,6 +89,8 @@ async function testPrinter() {
     await EscPos.cutPart();
     // You can also print image!
     await EscPos.printImage(file.uri); // file.uri = "file:///longpath/xxx.jpg"
+    // You can also print image with a width offset (scale down image by offset pixels)!
+    await EscPos.printImageWithOffset(file.uri, offset); // file.uri = "file:///longpath/xxx.jpg"
     // Print your design!
     await EscPos.printDesign(design);
     // Print QR Code, you can specify the size
@@ -142,23 +144,24 @@ EscPos.addListener("bluetoothDeviceFound", (event: any) => {
 
 ## Design Tags
 
-| Tag      | Description                                   |
-| -------- | :-------------------------------------------- |
-| {B}      | Bold.                                         |
-| {U}      | Underline.                                    |
-| {H1}     | Font Size. 2x2 / char                         |
-| {H2}     | Font Size. 1x2 / char                         |
-| {H3}     | Font Size. 2x1 / char                         |
-| {LS:?}   | Linespace. M = 24LS, L = 30LS                 |
-| {C}      | Align text to center.                         |
-| {R}      | Align text to right.                          |
-| {RP:?:?} | Repeat text. Eg. {RP:5:a} will output "aaaaa" |
-| {QR[?]}  | Print QR code.                                |
-| {IMG[?]} | Print image from a path.                      |
-| {<>}     | Left-right text separation.                   |
-| {---}    | Create a "---" separator.                     |
-| {===}    | Create a "===" separator.                     |
-| {BC[?]}  | Print the BarCode                             |
+| Tag      | Description                                            |
+| -------- | :----------------------------------------------------- |
+| {B}      | Bold.                                                  |
+| {U}      | Underline.                                             |
+| {H1}     | Font Size. 2x2 / char                                  |
+| {H2}     | Font Size. 1x2 / char                                  |
+| {H3}     | Font Size. 2x1 / char                                  |
+| {LS:?}   | Linespace. M = 24LS, L = 30LS                          |
+| {C}      | Align text to center.                                  |
+| {R}      | Align text to right.                                   |
+| {RP:?:?} | Repeat text. Eg. {RP:5:a} will output "aaaaa"          |
+| {QR[?]}  | Print QR code.                                         |
+| {IMG[?]} | Print image from a path.                               |
+| {IWO:?}  | Add Image Width Offset. In practice reduces image size.|
+| {<>}     | Left-right text separation.                            |
+| {---}    | Create a "---" separator.                              |
+| {===}    | Create a "===" separator.                              |
+| {BC[?]}  | Print the BarCode                                      |
 
 ## Events
 
