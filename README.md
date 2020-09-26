@@ -93,7 +93,13 @@ async function testPrinter() {
     await EscPos.printDesign(design);
     // Print QR Code, you can specify the size
     await EscPos.printQRCode("Proxima b is the answer!", 200);
-    // Print BarCode
+    //Print BarCode
+    //printBarCode(code,type,width,height,font,position)
+    //type: {65: UPC-A, 66: UPC-E, 67: EAN13, 68: EAN8, 69: CODE39, 70: ITF, 71: CODABAR, 72: CODE93, 73: CODE128}
+    //width: {2-6}
+    //height: {0-255}
+    //font: 0(FontA) or 1(FontB)
+    //position: (0: none, 1: top, 2: bottom, 3: top - bottom)
     await EscPos.printBarCode("Your Barcode here", 73, 3, 100, 0, 2);
     // Cut full!
     await EscPos.cutFull();
