@@ -20,6 +20,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+
+import leesiongchan.reactnativeescpos.command.PrinterCommand;
 import leesiongchan.reactnativeescpos.helpers.EscPosHelper;
 import leesiongchan.reactnativeescpos.utils.BitMatrixUtils;
 import static io.github.escposjava.print.Commands.*;
@@ -33,6 +35,13 @@ public class PrinterService {
     private final int DEFAULT_QR_CODE_SIZE = 200;
     private final int DEFAULT_IMG_MAX_HEIGHT = 200;
     private final int DEFAULT_IMG_WIDTH_OFFSET = 100;
+
+    private final int DEFAULT_BAR_CODE_HEIGHT = 120;
+    private final int DEFAULT_BAR_CODE_WIDTH = 3;
+    private final int DEFAULT_BAR_CODE_FORMAT = 73;//CODE-128
+    private final int DEFAULT_BAR_CODE_FONT = 0;
+    private final int DEFAULT_BAR_CODE_POSITION = 2;
+
     private int printingWidth = PRINTING_WIDTH_58_MM;
     private io.github.escposjava.PrinterService basePrinterService;
     private ReactApplicationContext context;
@@ -71,11 +80,16 @@ public class PrinterService {
     }
 
     // TODO: This isn't working correctly
+    // We have to modify the printBarcode method in io.github.escposjava.PrinterService
+    // Take a look on the getBytes() function. It works incorrectly.
     public void printBarcode(String code, String bc, int width, int height, String pos, String font)
             throws BarcodeSizeError {
         basePrinterService.printBarcode(code, bc, width, height, pos, font);
     }
-
+    public void printBarcode(String str, int nType, int nWidthX, int nHeight, int nHriFontType, int nHriFontPosition){
+        byte[] printerBarcode = PrinterCommand.getBarCodeCommand(str,nType,nWidthX,nHeight,nHriFontType,nHriFontPosition);
+        basePrinterService.write(printerBarcode);
+    }
     public void printSample() throws IOException {
         String design =
                 "               ABC Inc. {C}               " + "\n" +
@@ -187,6 +201,7 @@ public class PrinterService {
      *                                            *
      * DESIGN 3: Barcode                          *
      * {QR[Love me, hate me.]} {C}                *
+     * {BC[Your Barcode here]} {C}                *
      **/
     private ByteArrayOutputStream generateDesignByteArrayOutputStream(String text) throws IOException {
         BufferedReader reader = new BufferedReader(new StringReader(text.trim()));
@@ -196,6 +211,7 @@ public class PrinterService {
         while ((line = reader.readLine()) != null) {
             byte[] qtToWrite = null;
             byte[] imageToWrite = null;
+            byte[] bcToWrite = null;
             if (line.matches(".*\\{QR\\[(.+)\\]\\}.*")) {
                 try {
                     qtToWrite = generateQRCodeByteArrayOutputStream(line.replaceAll(".*\\{QR\\[(.+)\\]\\}.*", "$1"),
@@ -204,7 +220,9 @@ public class PrinterService {
                     throw new IOException(e);
                 }
             }
-
+            if (line.matches(".*\\{BC\\[(.+)\\]\\}.*")) {
+                bcToWrite = PrinterCommand.getBarCodeCommand(line.replaceAll(".*\\{BC\\[(.+)\\]\\}.*", "$1"),DEFAULT_BAR_CODE_FORMAT,DEFAULT_BAR_CODE_WIDTH,DEFAULT_BAR_CODE_HEIGHT,DEFAULT_BAR_CODE_FONT,DEFAULT_BAR_CODE_POSITION);
+            }
             if (line.matches(".*\\{IMG\\[(.+)\\]\\}.*")) {
                 try {
                     imageToWrite = generateImageByteArrayOutputStream(EscPosHelper.resizeImage(readImage(line.replaceAll(".*\\{IMG\\[(.+)\\]\\}.*", "$1"),context), printingWidth - DEFAULT_IMG_WIDTH_OFFSET, DEFAULT_IMG_MAX_HEIGHT)).toByteArray();
@@ -287,7 +305,10 @@ public class PrinterService {
                 if (imageToWrite != null) {
                     baos.write(imageToWrite);
                 }
-                if (qtToWrite == null && imageToWrite == null) {
+                if (bcToWrite != null) {
+                    baos.write(bcToWrite);
+                }
+                if (qtToWrite == null && imageToWrite == null && bcToWrite == null) {
                     baos.write(layoutBuilder.createFromDesign(line, charsOnLine).getBytes("GBK"));
                 }
             } catch (UnsupportedEncodingException e) {

@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import androidx.annotation.RequiresPermission;
-
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -18,19 +16,15 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
-import io.github.escposjava.print.NetworkPrinter;
-import io.github.escposjava.print.Printer;
-import io.github.escposjava.print.exceptions.BarcodeSizeError;
-import io.github.escposjava.print.exceptions.QRCodeException;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONObject;
-
-import static io.github.escposjava.print.Commands.*;
+import io.github.escposjava.print.NetworkPrinter;
+import io.github.escposjava.print.Printer;
+import io.github.escposjava.print.exceptions.BarcodeSizeError;
+import io.github.escposjava.print.exceptions.QRCodeException;
 
 public class EscPosModule extends ReactContextBaseJavaModule {
     public static final String PRINTING_SIZE_58_MM = "PRINTING_SIZE_58_MM";
@@ -118,7 +112,15 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             promise.reject(e);
         }
     }
-
+    @ReactMethod
+    public void printBarCode(String str, int nType, int nWidthX, int nHeight, int nHriFontType, int nHriFontPosition, Promise promise) {
+        try {
+            printerService.printBarcode(str,nType,nWidthX,nHeight,nHriFontType,nHriFontPosition);
+            promise.resolve(true);
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+    }
     @ReactMethod
     public void printDesign(String text, Promise promise) {
         try {
