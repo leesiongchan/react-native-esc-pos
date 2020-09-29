@@ -157,7 +157,7 @@ EscPos.addListener("bluetoothDeviceFound", (event: any) => {
 | {RP:?:?} | Repeat text. Eg. {RP:5:a} will output "aaaaa"          |
 | {QR[?]}  | Print QR code.                                         |
 | {IMG[?]} | Print image from a path.                               |
-| {IWO:?}  | Add Image Width Offset. In practice reduces image size.|
+| {IMG[?]:?}| Print image scaled down to make space for a width offset.  Eg.: {IMG[path]:32}|
 | {<>}     | Left-right text separation.                            |
 | {---}    | Create a "---" separator.                              |
 | {===}    | Create a "===" separator.                              |
