@@ -58,7 +58,7 @@ public class LayoutBuilder {
         while ((line = reader.readLine()) != null) {
             if (line.matches("---.*")) {
                 designText.append(createDivider(charsOnLine));
-            } else if (line.matches("===.*")){
+            } else if (line.matches("===.*")) {
                 designText.append(createDivider('=',charsOnLine));
             } else if (line.contains("{RP:")) {
                 designText.append(duplicateStringSymbol(line));
@@ -147,11 +147,11 @@ public class LayoutBuilder {
         String regex = "\\"+repeatTag+"\\d+:.*?\\}";
         Matcher m = Pattern.compile(regex).matcher(text);
         int tagCount = 0;
-        while(m.find()){
+        while(m.find()) {
             tagCount++;
         }
 
-        for(int x = 0; x < tagCount; x++){
+        for(int x = 0; x < tagCount; x++) {
             String symbol = "", count = "0", repeatedSymbol = "";
             int rpIndex = text.indexOf(repeatTag);
             String workingString = text.substring(rpIndex+(repeatTag.length()), text.indexOf('}'));

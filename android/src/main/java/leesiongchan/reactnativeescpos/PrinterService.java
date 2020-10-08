@@ -67,6 +67,7 @@ public class PrinterService {
     }
 
     public void print(String text) throws UnsupportedEncodingException {
+        // TODO: get rid of GBK default!
         write(text.getBytes("GBK"));
     }
 
@@ -82,35 +83,35 @@ public class PrinterService {
         basePrinterService.lineBreak(nbLine);
     }
 
-    // TODO: This isn't working correctly
     // We have to modify the printBarcode method in io.github.escposjava.PrinterService
     // Take a look on the getBytes() function. It works incorrectly.
     public void printBarcode(String code, String bc, int width, int height, String pos, String font)
             throws BarcodeSizeError {
         basePrinterService.printBarcode(code, bc, width, height, pos, font);
     }
-    public void printBarcode(String str, int nType, int nWidthX, int nHeight, int nHriFontType, int nHriFontPosition){
+
+    public void printBarcode(String str, int nType, int nWidthX, int nHeight, int nHriFontType, int nHriFontPosition) {
         byte[] printerBarcode = PrinterCommand.getBarCodeCommand(str,nType,nWidthX,nHeight,nHriFontType,nHriFontPosition);
         basePrinterService.write(printerBarcode);
     }
+
     public void printSample() throws IOException {
         String design =
                 "               ABC Inc. {C}               " + "\n" +
-                        "           1234 Main Street {C}           " + "\n" +
-                        "        Anytown, US 12345-6789 {C}        " + "\n" +
-                        "            (555) 123-4567 {C}            " + "\n" +
-                        "                                          " + "\n" +
-                        "          D0004 | Table #: A1 {C}         " + "\n" +
-                        "------------------------------------------" + "\n" +
-                        "Item            {<>}    Qty  Price  Amount" + "\n" +
-                        "Chicken Rice    {<>}      2  12.50   25.00" + "\n" +
-                        "Coke Zero       {<>}      5   3.00   15.00" + "\n" +
-                        "Fries           {<>}      3   3.00    9.00" + "\n" +
-                        "Fresh Oyster    {<>}      1   8.00    8.00" + "\n" +
-                        "Lobster Roll    {<>}      1  16.50   16.50" + "\n" +
-                        "------------------------------------------" + "\n" +
-                        "       {QR[Where are the aliens?]}        " + "\n" +
-                        "       {IMG[file://]}                     " + "\n";
+                "           1234 Main Street {C}           " + "\n" +
+                "        Anytown, US 12345-6789 {C}        " + "\n" +
+                "            (555) 123-4567 {C}            " + "\n" +
+                "                                          " + "\n" +
+                "          D0004 | Table #: A1 {C}         " + "\n" +
+                "------------------------------------------" + "\n" +
+                "Item            {<>}    Qty  Price  Amount" + "\n" +
+                "Chicken Rice    {<>}      2  12.50   25.00" + "\n" +
+                "Coke Zero       {<>}      5   3.00   15.00" + "\n" +
+                "Fries           {<>}      3   3.00    9.00" + "\n" +
+                "Fresh Oyster    {<>}      1   8.00    8.00" + "\n" +
+                "Lobster Roll    {<>}      1  16.50   16.50" + "\n" +
+                "------------------------------------------" + "\n" +
+                "       {QR[Where are the aliens?]}        " + "\n";
 
         printDesign(design);
     }
@@ -186,11 +187,11 @@ public class PrinterService {
         basePrinterService.close();
     }
 
-    public void kickCashDrawerPin2(){
+    public void kickCashDrawerPin2() {
         basePrinterService.write(CD_KICK_2);
     }
 
-    public void kickCashDrawerPin5(){
+    public void kickCashDrawerPin5() {
         basePrinterService.write(CD_KICK_5);
     }
 
@@ -243,7 +244,7 @@ public class PrinterService {
             if (imgMatcher.find()) {
                 try {
                     int offset = DEFAULT_IMG_WIDTH_OFFSET;
-                    if(imgMatcher.group(2).length() > 0) {
+                    if (imgMatcher.group(2).length() > 0) {
                         offset = Integer.parseInt(imgMatcher.group(1));
                     }
                     imageToWrite = generateImageByteArrayOutputStream(
@@ -337,6 +338,7 @@ public class PrinterService {
                     baos.write(bcToWrite);
                 }
                 if (qtToWrite == null && imageToWrite == null && bcToWrite == null) {
+                    // TODO: get rid of GBK default!
                     baos.write(layoutBuilder.createFromDesign(line, charsOnLine).getBytes("GBK"));
                 }
             } catch (UnsupportedEncodingException e) {

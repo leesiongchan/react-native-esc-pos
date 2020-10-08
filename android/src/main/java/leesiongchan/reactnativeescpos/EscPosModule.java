@@ -112,8 +112,9 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             promise.reject(e);
         }
     }
+
     @ReactMethod
-    public void printBarCode(String str, int nType, int nWidthX, int nHeight, int nHriFontType, int nHriFontPosition, Promise promise) {
+    public void printBarcode(String str, int nType, int nWidthX, int nHeight, int nHriFontType, int nHriFontPosition, Promise promise) {
         try {
             printerService.printBarcode(str,nType,nWidthX,nHeight,nHriFontType,nHriFontPosition);
             promise.resolve(true);
@@ -121,6 +122,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             promise.reject(e);
         }
     }
+
     @ReactMethod
     public void printDesign(String text, Promise promise) {
         try {

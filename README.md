@@ -3,25 +3,17 @@
 A React Native ESC/POS module to help you connect to your ESC/POS printer easily.
 It also has provide an intuitive way to design your layout, check below example to see how easy to get your layout ready!
 
-**iOS IS NOT READY**
+**PS: iOS IS NOT IMPLEMENTED YET**
 
 ## Getting started
 
 `$ yarn add @leesiongchan/react-native-esc-pos`
 
-**NOTE: Skip below installation guide if you are using React Native >= 0.60**
+**PS: Skip below installation guide if you are using React Native >= 0.60**
 
 ### Mostly automatic installation
 
 `$ react-native link @leesiongchan/react-native-esc-pos`
-
-### Android Bluetooth Permission
-Add following permission into AndroidManifest.xml
-```
-<uses-permission android:name="android.permission.BLUETOOTH"/>
-<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-```
 
 ### Manual installation
 
@@ -48,6 +40,16 @@ Add following permission into AndroidManifest.xml
    ```
      compile project(':react-native-esc-pos')
    ```
+
+## Android Bluetooth Permission
+
+Add following permissions into `AndroidManifest.xml`
+
+```
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.BLUETOOTH" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+```
 
 ## Usage
 
@@ -79,7 +81,7 @@ async function testPrinter() {
     // If you use `bluetooth`, second parameter is not required.
     await EscPos.connect("10.10.10.10", 9100);
 
-    // Once connected, you can setup your printing size, either `PRINTING_SIZE_58_MM` or `PRINTING_SIZE_80_MM`
+    // Once connected, you can setup your printing size, either `PRINTING_SIZE_58_MM`, `PRINTING_SIZE_76_MM` or `PRINTING_SIZE_80_MM`
     EscPos.setPrintingSize(EscPos.PRINTING_SIZE_80_MM);
     // 0 to 8 (0-3 = smaller, 4 = default, 5-8 = larger)
     EscPos.setTextDensity(8);
@@ -87,22 +89,22 @@ async function testPrinter() {
     await EscPos.printSample();
     // Cut half!
     await EscPos.cutPart();
-    // You can also print image!
-    await EscPos.printImage(file.uri); // file.uri = "file:///longpath/xxx.jpg"
-    // You can also print image with a width offset (scale down image by offset pixels)!
-    await EscPos.printImageWithOffset(file.uri, offset); // file.uri = "file:///longpath/xxx.jpg"
+    // You can also print image! eg. "file:///longpath/xxx.jpg"
+    await EscPos.printImage(file.uri);
+    // You can also print image with a specific width offset (scale down image by offset pixels)! eg. "file:///longpath/xxx.jpg"
+    await EscPos.printImageWithOffset(file.uri, offset);
     // Print your design!
     await EscPos.printDesign(design);
     // Print QR Code, you can specify the size
     await EscPos.printQRCode("Proxima b is the answer!", 200);
-    //Print BarCode
-    //printBarCode(code,type,width,height,font,position)
-    //type: {65: UPC-A, 66: UPC-E, 67: EAN13, 68: EAN8, 69: CODE39, 70: ITF, 71: CODABAR, 72: CODE93, 73: CODE128}
-    //width: {2-6}
-    //height: {0-255}
-    //font: 0(FontA) or 1(FontB)
-    //position: (0: none, 1: top, 2: bottom, 3: top - bottom)
-    await EscPos.printBarCode("Your Barcode here", 73, 3, 100, 0, 2);
+    // Print Barcode
+    // printBarCode({code}, {type}, {width}, {height}, {font}, {fontPosition})
+    // type: 65=UPC-A; 66=UPC-E; 67=EAN13; 68=EAN8; 69=CODE39; 70=ITF; 71=CODABAR; 72=CODE93; 73=CODE128}
+    // width: 2-6
+    // height: 0-255
+    // font: 0=FontA; 1=FontB
+    // fontPosition: 0=none; 1=top; 2=bottom; 3=top-bottom
+    await EscPos.printBarcode("Your barcode here", 73, 3, 100, 0, 2);
     // Cut full!
     await EscPos.cutFull();
     // Beep!
@@ -117,24 +119,22 @@ async function testPrinter() {
 }
 ```
 
-## Scan For Bluetooth Devices
-
-To scan for available bluetooth in range
+### Scan for available bluetooth devices
 
 ```javascript
 EscPos.scanDevices();
 ```
 
-To stop scan
+### Stop scanning
 
 ```javascript
 EscPos.stopScan();
 ```
 
-Register callback events to receive device found:-
+### Events
 
 ```javascript
-EscPos.addListener("bluetoothDeviceFound", (event: any) => {
+EscPos.addListener("bluetoothDeviceFound", (event) => {
   if (event.state === EscPos.BLUETOOTH_DEVICE_FOUND) {
     console.log("Device Found!");
     console.log("Device Name : " + event.deviceInfo.name);
@@ -142,33 +142,10 @@ EscPos.addListener("bluetoothDeviceFound", (event: any) => {
   }
 ```
 
-## Design Tags
-
-| Tag      | Description                                            |
-| -------- | :----------------------------------------------------- |
-| {B}      | Bold.                                                  |
-| {U}      | Underline.                                             |
-| {H1}     | Font Size. 2x2 / char                                  |
-| {H2}     | Font Size. 1x2 / char                                  |
-| {H3}     | Font Size. 2x1 / char                                  |
-| {LS:?}   | Linespace. M = 24LS, L = 30LS                          |
-| {C}      | Align text to center.                                  |
-| {R}      | Align text to right.                                   |
-| {RP:?:?} | Repeat text. Eg. {RP:5:a} will output "aaaaa"          |
-| {QR[?]}  | Print QR code.                                         |
-| {IMG[?]} | Print image from a path.                               |
-| {IMG[?]:?}| Print image scaled down to make space for a width offset.  Eg.: {IMG[path]:32}|
-| {<>}     | Left-right text separation.                            |
-| {---}    | Create a "---" separator.                              |
-| {===}    | Create a "===" separator.                              |
-| {BC[?]}  | Print the BarCode                                      |
-
-## Events
-
-To listen to bluetooth state change
+To listen to bluetooth state changes:
 
 ```javascript
-EscPos.addListener("bluetoothStateChanged", (event: any) => {
+EscPos.addListener("bluetoothStateChanged", (event) => {
   if (event.state === EscPos.BLUETOOTH_CONNECTED) {
     console.log("Device Connected!");
     console.log("Device Name : " + event.deviceInfo.name);
@@ -177,48 +154,40 @@ EscPos.addListener("bluetoothStateChanged", (event: any) => {
 });
 ```
 
-To get Bluetooth Conenction State:
+### Constants
 
+- EscPos.PRINTING_SIZE_58_MM
+- EscPos.PRINTING_SIZE_78_MM
+- EscPos.PRINTING_SIZE_80_MM
 - EscPos.BLUETOOTH_CONNECTED
 - EscPos.BLUETOOTH_DISCONNECTED
 
-To get Connected / Disconnected Bluetooth Device Info
-Device Name:
+## Design Tags
 
-- event.deviceInfo.name
-
-Device MAC Address:
-
-- event.deviceInfo.macAddress
-
-## New Features
-
-- You can now easily duplicate a string or character and print onto your design.
-- Introducing Repeat feature:
-  > Main tag {RP: number of times to duplicate required: string or character to duplicate}
-  > Example:
-  > Input {RP:5:\*}
-  > Output: **\***
-
-> If you have few characters to duplicate in a line and some text within the line you wouldn't want to disturb, you can do it as per below:
-> Example:
-> Input: {RP:3:= }This is a test string{RP:2:@_@}
-> Output: = = = This is a test string@_@@\_@
->
-> Example 2:
-> Input: {RP:3:-}This is a test string{RP:3:-}
-> Output: ---This is a test string---
->
-> Important note: this feature does not support repetitive printing of Closing Curly Bracket }.
-
-- Print to 76mm Printer (Experimental)
-
+| Tag        | Description                                                                    |
+| ---------- | :----------------------------------------------------------------------------- |
+| {B}        | Bold.                                                                          |
+| {U}        | Underline.                                                                     |
+| {H1}       | Font Size. 2x2 / char                                                          |
+| {H2}       | Font Size. 1x2 / char                                                          |
+| {H3}       | Font Size. 2x1 / char                                                          |
+| {LS:?}     | Linespace. M = 24LS, L = 30LS                                                  |
+| {C}        | Align text to center.                                                          |
+| {R}        | Align text to right.                                                           |
+| {RP:?:?}   | Repeat text. Eg. {RP:5:a} will output "aaaaa".                                 |
+| {BC[?]}    | Print barcode.                                                                 |
+| {QR[?]}    | Print QR code.                                                                 |
+| {IMG[?]}   | Print image from a path.                                                       |
+| {IMG[?]:?} | Print image scaled down to make space for a width offset. Eg. {IMG[<path>]:32} |
+| {<>}       | Left-right text separation.                                                    |
+| {---}      | Create a "---" separator.                                                      |
+| {===}      | Create a "===" separator.                                                      |
 
 ## TODO
 
 - [x] Android support
 - [ ] iOS support
-- [ ] Print barcode
+- [x] Print barcode
 - [ ] Add TypeScript support
 - [x] Bluetooth support
 - [ ] Serial port support
