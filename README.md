@@ -140,6 +140,7 @@ EscPos.addListener("bluetoothDeviceFound", (event) => {
     console.log("Device Name : " + event.deviceInfo.name);
     console.log("Device MAC Address : " + event.deviceInfo.macAddress);
   }
+});
 ```
 
 To listen to bluetooth state changes:
