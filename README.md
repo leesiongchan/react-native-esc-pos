@@ -1,5 +1,7 @@
 # React Native ESC/POS module
 
+## THIS PROJECT IS NOT MAINTAINED ANYMORE, YOU ARE WELCOME TO CREATE YOUR OWN FORK =)
+
 A React Native ESC/POS module to help you connect to your ESC/POS printer easily.
 It also has provide an intuitive way to design your layout, check below example to see how easy to get your layout ready!
 
